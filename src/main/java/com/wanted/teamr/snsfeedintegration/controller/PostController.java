@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton.controller;
+package com.wanted.teamr.snsfeedintegration.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

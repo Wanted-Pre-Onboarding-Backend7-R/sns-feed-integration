@@ -1,13 +1,13 @@
-package com.wanted.teamr.skeleton;
+package com.wanted.teamr.snsfeedintegration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SkeletonApplication {
+public class SnsFeedIntegrationApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SkeletonApplication.class, args);
+		SpringApplication.run(SnsFeedIntegrationApplication.class, args);
 	}
 
 }

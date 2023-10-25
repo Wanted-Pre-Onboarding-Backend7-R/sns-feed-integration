@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton.service;
+package com.wanted.teamr.snsfeedintegration.service;
 
 import org.springframework.stereotype.Service;
 

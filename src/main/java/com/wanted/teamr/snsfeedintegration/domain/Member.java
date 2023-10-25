@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton.domain;
+package com.wanted.teamr.snsfeedintegration.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

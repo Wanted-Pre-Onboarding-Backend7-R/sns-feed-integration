@@ -1,10 +1,10 @@
-package com.wanted.teamr.skeleton;
+package com.wanted.teamr.snsfeedintegration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SkeletonApplicationTests {
+class SnsFeedIntegrationApplicationTests {
 
 	@Test
 	void contextLoads() {
