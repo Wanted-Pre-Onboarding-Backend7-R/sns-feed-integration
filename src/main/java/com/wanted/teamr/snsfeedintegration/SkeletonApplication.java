@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton;
+package com.wanted.teamr.snsfeedintegration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton.exception;
+package com.wanted.teamr.snsfeedintegration.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

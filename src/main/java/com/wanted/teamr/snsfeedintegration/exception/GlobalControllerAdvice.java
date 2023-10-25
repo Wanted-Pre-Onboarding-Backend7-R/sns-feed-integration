@@ -1,4 +1,4 @@
-package com.wanted.teamr.skeleton.exception;
+package com.wanted.teamr.snsfeedintegration.exception;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
