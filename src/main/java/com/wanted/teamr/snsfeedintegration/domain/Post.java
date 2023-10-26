@@ -3,20 +3,22 @@ package com.wanted.teamr.snsfeedintegration.domain;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@EntityListeners(AuditingEntityListener.class)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Post extends BaseEntity {
 
@@ -52,4 +54,22 @@ public class Post extends BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+
+    public Post(String contentId, SnsType type,
+                String title, String content, Long viewCount, Long likeCount,
+                Long shareCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.contentId = contentId;
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.viewCount = viewCount;
+        this.likeCount = likeCount;
+        this.shareCount = shareCount;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public void increaseLikeCount() {
+        likeCount += 1;
+    }
 }
