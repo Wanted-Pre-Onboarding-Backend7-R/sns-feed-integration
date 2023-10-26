@@ -96,10 +96,17 @@ class MemberControllerWebMvcTest {
             validateRequestBody(ACCOUNT_NAME, email, PASSWORD, null, ErrorCode.INVALID_EMAIL_FORMAT);
         }
 
-        private void validateRequestBody(String accountName, String email, String password, String field, ErrorCode errorCode) throws Exception {
+        private void validateRequestBody(String accountName,
+                                         String email,
+                                         String password,
+                                         String field,
+                                         ErrorCode errorCode) throws Exception {
             JoinRequestDTO dto = new JoinRequestDTO(accountName, email, password);
             String content = mapper.writeValueAsString(dto);
-            String message = messageSource.getMessage(errorCode.getValidationCodeName(), new String[]{field}, Locale.getDefault());
+            String message = messageSource.getMessage(
+                    errorCode.getValidationCodeName(),
+                    new String[]{field},
+                    Locale.getDefault());
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content)
