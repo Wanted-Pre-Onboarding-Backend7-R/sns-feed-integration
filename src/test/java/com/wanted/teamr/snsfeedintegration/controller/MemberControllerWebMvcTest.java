@@ -1,6 +1,5 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
@@ -11,6 +10,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
@@ -85,32 +86,25 @@ class MemberControllerWebMvcTest {
         }
 
         void testNotBlank(String accountName, String email, String password, String field) throws Exception {
-            JoinRequestDTO dto = new JoinRequestDTO(accountName, email, password);
-            String content = mapper.writeValueAsString(dto);
-            String message = messageSource.getMessage("NotBlank", new String[]{field}, Locale.getDefault());
-            mockMvc.perform(post(URI)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(content)
-                    )
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.errorCode").value(ErrorCode.BLANK_PROPERTY.name()))
-                    .andExpect(jsonPath("$.message").value(message))
-                    .andDo(print())
-                    .andReturn();
+            validateRequestBody(accountName, email, password, field, ErrorCode.BLANK_PROPERTY);
         }
 
         @DisplayName("잘못된 이메일 형식")
         @Test
         void givenInvalidEmailFormat_then400() throws Exception {
-            JoinRequestDTO dto = new JoinRequestDTO(ACCOUNT_NAME, "wrong_email@", PASSWORD);
+            validateRequestBody(ACCOUNT_NAME, "wrong_email@", PASSWORD, null, ErrorCode.INVALID_EMAIL_FORMAT);
+        }
+
+        private void validateRequestBody(String accountName, String email, String password, String field, ErrorCode errorCode) throws Exception {
+            JoinRequestDTO dto = new JoinRequestDTO(accountName, email, password);
             String content = mapper.writeValueAsString(dto);
-            String message = messageSource.getMessage("Email", null, Locale.getDefault());
+            String message = messageSource.getMessage(errorCode.getValidationCodeName(), new String[]{field}, Locale.getDefault());
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content)
                     )
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.errorCode").value(ErrorCode.INVALID_EMAIL_FORMAT.name()))
+                    .andExpect(jsonPath("$.errorCode").value(errorCode.name()))
                     .andExpect(jsonPath("$.message").value(message))
                     .andDo(print())
                     .andReturn();
