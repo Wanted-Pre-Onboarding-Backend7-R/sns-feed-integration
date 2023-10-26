@@ -1,0 +1,6 @@
+external-api:
+  sns-api-domains:
+    instagram: "https://www.facebook.com/"
+    facebook: "https://www.twitter.com/"
+    twitter: "https://www.instagram.com/"
+    threads: "https://www.threads.net/"
