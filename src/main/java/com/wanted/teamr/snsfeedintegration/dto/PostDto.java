@@ -21,15 +21,15 @@ public class PostDto {
     private final Long viewCount;
     private final Long likeCount;
     private final Long shareCount;
-    private final LocalDateTime updatedAt;
     private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public static PostDto of(Post post) {
         List<String> hashtags = post.getPostHashtags().stream().map(PostHashtag::getHashtag).toList();
         return new PostDto(
                 post.getId(), post.getContentId(), post.getType().name(), post.getTitle(), post.getContent(),
                 hashtags, post.getViewCount(), post.getLikeCount(), post.getShareCount(),
-                post.getUpdatedAt(), post.getCreatedAt()
+                post.getCreatedAt(), post.getUpdatedAt()
         );
     }
 
