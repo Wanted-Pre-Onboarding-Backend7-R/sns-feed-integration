@@ -13,6 +13,7 @@ import java.lang.annotation.Annotation;
 public enum ErrorCode {
     DUPLICATE_ACCOUNT_NAME("이미 같은 이름의 계정이 존재합니다", HttpStatus.BAD_REQUEST),
     BLANK_PROPERTY(null, HttpStatus.BAD_REQUEST, NotBlank.class),
+    INVALID_EMAIL_FORMAT("이메일 형식이 유효하지 않습니다.", HttpStatus.BAD_REQUEST, Email.class),
     NOT_FOUND_ERROR_CODE("대응하는 에러코드가 존재하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
 
