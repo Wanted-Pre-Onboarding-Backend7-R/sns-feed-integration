@@ -90,9 +90,10 @@ class MemberControllerWebMvcTest {
         }
 
         @DisplayName("잘못된 이메일 형식")
-        @Test
-        void givenInvalidEmailFormat_then400() throws Exception {
-            validateRequestBody(ACCOUNT_NAME, "wrong_email@", PASSWORD, null, ErrorCode.INVALID_EMAIL_FORMAT);
+        @ValueSource(strings = {"wrong_email@", "@a.com", "aa.com", "a.d@s"})
+        @ParameterizedTest
+        void givenInvalidEmailFormat_then400(String email) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, email, PASSWORD, null, ErrorCode.INVALID_EMAIL_FORMAT);
         }
 
         private void validateRequestBody(String accountName, String email, String password, String field, ErrorCode errorCode) throws Exception {
