@@ -12,7 +12,8 @@ public enum ErrorCode {
     EXPIRED_TOKEN("만료된 JWT 토큰입니다.", HttpStatus.BAD_REQUEST),
     WRONG_TOKEN("지원되지 않는 JWT 토큰입니다.", HttpStatus.BAD_REQUEST),
     NOT_SAME_AUTHORITY("권한이 일치하지 않습니다", HttpStatus.BAD_REQUEST),
-    REQUIRE_AUTHORITY("필요한 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    REQUIRE_AUTHORITY("필요한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    WRONG_ACCOUNT_INFO("아이디가 없거나 비밀번호가 틀렸습니다.", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus httpStatus;
