@@ -22,6 +22,8 @@ import java.util.Map;
 public class ExternalApiConfig {
     private Map<String, String> snsApiDomains;
 
+    private Map<String, String> postPath;
+
     /**
      * Set 함수를 만드는 것을 선호하진 않으나 Set 함수가 없을 때 다음 예외가 발생했습니다.
      * java.lang.IllegalStateException: No setter found for property: sns-api-domains
@@ -33,5 +35,9 @@ public class ExternalApiConfig {
      */
     public void setSnsApiDomains(Map<String, String> snsApiDomains) {
         this.snsApiDomains = snsApiDomains;
+    }
+
+    public void setPostPath(Map<String, String> postPath) {
+        this.postPath = postPath;
     }
 }

@@ -4,3 +4,6 @@ external-api:
     facebook: "https://www.twitter.com/"
     twitter: "https://www.instagram.com/"
     threads: "https://www.threads.net/"
+
+  post-path:
+    like: "likes/%s"
