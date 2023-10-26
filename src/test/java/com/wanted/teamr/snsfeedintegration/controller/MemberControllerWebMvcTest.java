@@ -1,5 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
@@ -97,5 +98,24 @@ class MemberControllerWebMvcTest {
                     .andDo(print())
                     .andReturn();
         }
+
+        @DisplayName("잘못된 이메일 형식")
+        @Test
+        void givenInvalidEmailFormat_then400() throws Exception {
+            JoinRequestDTO dto = new JoinRequestDTO(ACCOUNT_NAME, "wrong_email@", PASSWORD);
+            String content = mapper.writeValueAsString(dto);
+            String message = messageSource.getMessage("Email", null, Locale.getDefault());
+            mockMvc.perform(post(URI)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errorCode").value(ErrorCode.INVALID_EMAIL_FORMAT.name()))
+                    .andExpect(jsonPath("$.message").value(message))
+                    .andDo(print())
+                    .andReturn();
+        }
+
     }
+
 }
