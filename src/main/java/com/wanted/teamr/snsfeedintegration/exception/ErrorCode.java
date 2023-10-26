@@ -19,18 +19,22 @@ public enum ErrorCode {
 
     private final String message;
     private final HttpStatus httpStatus;
-    private final Class<? extends Annotation> code;
+    private final Class<? extends Annotation> validationCode;
 
     ErrorCode(String message, HttpStatus httpStatus) {
         this(message, httpStatus, null);
     }
 
+    public String getValidationCodeName() {
+        return validationCode.getSimpleName();
+    }
+
     public static ErrorCode getBy(String validationCode) {
         for (ErrorCode errorCode : values()) {
-            if (errorCode.getCode() == null) {
+            if (errorCode.getValidationCode() == null) {
                 continue;
             }
-            if (validationCode.equals(errorCode.getCode().getSimpleName())) {
+            if (validationCode.equals(errorCode.getValidationCodeName())) {
                 return errorCode;
             }
         }
