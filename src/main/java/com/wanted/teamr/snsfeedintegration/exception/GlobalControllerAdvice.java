@@ -37,20 +37,28 @@ public class GlobalControllerAdvice {
 
         FieldError firstFieldError = e.getBindingResult().getFieldErrors().get(0);
         String validationCode = Objects.requireNonNull(firstFieldError.getCode());
-        String message = messageSource.getMessage(
-                validationCode,
-                new String[]{firstFieldError.getField()},
-                Locale.getDefault());
+        ErrorCode errorCode = ErrorCode.getBy(validationCode);
+        String message = makeMessage(validationCode, errorCode, firstFieldError.getField());
         log.error("firstFieldError.getField(): {}", firstFieldError.getField());
         log.error("validationCode: {}", validationCode);
         log.error("message: {}", message);
 
-        ErrorCode errorCode = ErrorCode.getBy(validationCode);
         CustomErrorResponse body = new CustomErrorResponse(errorCode, message);
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .header(HttpHeaders.CONTENT_ENCODING, Encoding.DEFAULT_CHARSET.name())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
+    }
+
+    private String makeMessage(String validationCode, ErrorCode errorCode, String field) {
+        String message = errorCode.getMessage();
+        if (message == null) {
+            message = messageSource.getMessage(
+                    validationCode,
+                    new String[]{field},
+                    Locale.getDefault());
+        }
+        return message;
     }
 
 }
