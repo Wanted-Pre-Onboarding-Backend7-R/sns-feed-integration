@@ -4,13 +4,12 @@ import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-@Builder(access = AccessLevel.PRIVATE)
 @Entity
 public class Member extends BaseEntity {
 
@@ -29,6 +28,15 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Boolean isApproved;
 
+    @Builder(access = AccessLevel.PRIVATE)
+    public Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
+        this.accountName = accountName;
+        this.email = email;
+        this.password = password;
+        this.approvalCode = approvalCode;
+        this.isApproved = isApproved;
+    }
+
     public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
         return builder().accountName(dto.getAccountName())
                 .email(dto.getEmail())
@@ -37,4 +45,5 @@ public class Member extends BaseEntity {
                 .isApproved(false)
                 .build();
     }
+
 }
