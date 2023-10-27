@@ -2,6 +2,7 @@ package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
+import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
 import com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode;
 import com.wanted.teamr.snsfeedintegration.security.SecurityConfig;
@@ -45,8 +46,10 @@ class MemberControllerWebMvcTest {
     class Join {
 
         private static final String URI = BASE_URI + "/join";
-        private static final String ACCOUNT_NAME = "jeonggoo75";
-        private static final String EMAIL = "jeonggoo75@gmail.com";
+        private static final String ACCOUNT_NAME = "myaccount";
+        private static final String EMAIL_HEAD = "example";
+        private static final String EMAIL_DOMAIN = "gmail.com";
+        private static final String EMAIL = EMAIL_HEAD + "@" + EMAIL_DOMAIN;
         private static final String PASSWORD = "qlalfqjsgh486^^";
         private static final String BLANK = "  ";
 
@@ -79,6 +82,49 @@ class MemberControllerWebMvcTest {
         @ParameterizedTest
         void givenInvalidEmailFormat_then400(String email) throws Exception {
             validateRequestBody(ACCOUNT_NAME, email, PASSWORD, RequestBodyErrorCode.EMAIL_INVALID_FORMAT);
+        }
+
+        @DisplayName("[비밀번호] 짧음")
+        @ValueSource(strings = {"101sadf", "345^12as", "zxc_123^^"})
+        @ParameterizedTest
+        void givenShortPassword_then400(String password) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, EMAIL, password, ErrorCode.PASSWORD_SHORT);
+        }
+
+        @DisplayName("[비밀번호] 3개 이상 같은 문자 반복")
+        @ValueSource(strings = {"asdfj3___123", "asdf^###axx", "Asxcvttt90^@"})
+        @ParameterizedTest
+        void givenPasswordWithRepeatedChar_then400(String password) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, EMAIL, password, ErrorCode.PASSWORD_REPEATED_CHAR);
+        }
+
+        @DisplayName("[비밀번호] 단순 숫자/영문/특수문자만 (2개 이상 미조합)")
+        @ValueSource(strings = {"1238471912398", "aasdfkjhea", "##@@!##!!@!!^"})
+        @ParameterizedTest
+        void givenSimplePasword_then400(String password) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, EMAIL, password, ErrorCode.PASSWORD_SIMPLE);
+        }
+
+        @DisplayName("[비밀번호] 개인정보 포함")
+        @ValueSource(strings = {EMAIL_HEAD + "123123", ACCOUNT_NAME + "^^"})
+        @ParameterizedTest
+        void givenPasswordWithPersonalInfo_then400(String password) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, EMAIL, password, ErrorCode.PASSWORD_PERSONAL_INFO);
+        }
+
+        @DisplayName("성공")
+        @Test
+        void givenValidInfo_then201() throws Exception {
+            JoinRequestDTO dto = new JoinRequestDTO(ACCOUNT_NAME, EMAIL, PASSWORD);
+            String content = mapper.writeValueAsString(dto);
+            mockMvc.perform(post(URI)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content)
+                    )
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$").doesNotExist())
+                    .andDo(print())
+                    .andReturn();
         }
 
         private void validateRequestBody(String accountName,
