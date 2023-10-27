@@ -1,7 +1,7 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
+import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
 import com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode;
@@ -55,7 +55,7 @@ class MemberControllerWebMvcTest {
 
         @BeforeEach
         void setUp() {
-            given(memberService.join(any(JoinRequestDTO.class)))
+            given(memberService.join(any(MemberJoinRequest.class)))
                     .willReturn(1L);
         }
 
@@ -115,7 +115,7 @@ class MemberControllerWebMvcTest {
         @DisplayName("성공")
         @Test
         void givenValidInfo_then201() throws Exception {
-            JoinRequestDTO dto = new JoinRequestDTO(ACCOUNT_NAME, EMAIL, PASSWORD);
+            MemberJoinRequest dto = new MemberJoinRequest(ACCOUNT_NAME, EMAIL, PASSWORD);
             String content = mapper.writeValueAsString(dto);
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ class MemberControllerWebMvcTest {
                                          String email,
                                          String password,
                                          ErrorCodeType errorCodeType) throws Exception {
-            JoinRequestDTO dto = new JoinRequestDTO(accountName, email, password);
+            MemberJoinRequest dto = new MemberJoinRequest(accountName, email, password);
             String content = mapper.writeValueAsString(dto);
             String message = errorCodeType.getMessage();
             mockMvc.perform(post(URI)

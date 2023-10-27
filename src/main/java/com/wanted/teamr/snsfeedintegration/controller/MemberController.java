@@ -1,6 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
-import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
+import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.service.MemberService;
 import com.wanted.teamr.snsfeedintegration.util.PasswordValidator;
 import com.wanted.teamr.snsfeedintegration.util.ValidationSequence;
@@ -21,7 +21,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody JoinRequestDTO dto) {
+    public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody MemberJoinRequest dto) {
         PasswordValidator.validatePassword(dto);
         memberService.join(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);

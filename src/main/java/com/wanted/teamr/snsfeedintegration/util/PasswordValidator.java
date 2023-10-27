@@ -1,6 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.util;
 
-import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
+import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 
@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 public class PasswordValidator {
 
     // 통상적으로 자주 사용되는 비밀번호는 다른 모든 조건에 스크리닝 되어서 포함하지 않습니다.
-    public static void validatePassword(JoinRequestDTO dto) {
+    public static void validatePassword(MemberJoinRequest dto) {
         String password = dto.getPassword();
         char[] passwordChars = password.toCharArray();
 

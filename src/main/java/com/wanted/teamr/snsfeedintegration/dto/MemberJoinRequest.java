@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class JoinRequestDTO {
+public class MemberJoinRequest {
 
     @NotBlank
     private String accountName;
