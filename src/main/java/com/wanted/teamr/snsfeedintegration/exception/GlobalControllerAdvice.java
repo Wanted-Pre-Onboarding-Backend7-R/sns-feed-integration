@@ -1,10 +1,8 @@
 package com.wanted.teamr.snsfeedintegration.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.server.Encoding;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Locale;
 import java.util.Objects;
 
 @Slf4j
@@ -22,13 +19,13 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
-    private final MessageSource messageSource;
-
     @ExceptionHandler
-    public CustomErrorResponse handler(CustomException exception, HttpServletResponse response) {
+    public ResponseEntity<?> handle(CustomException exception) {
         log.error("MyException ", exception);
-        response.setStatus(HttpStatus.OK.value());
-        return new CustomErrorResponse(exception.getErrorCode());
+
+        ErrorCodeType errorCodeType = exception.getErrorCodeType();
+        CustomErrorResponse body = new CustomErrorResponse(errorCodeType);
+        return makeResponseEntity(errorCodeType.getHttpStatus(), body);
     }
 
     @ExceptionHandler
@@ -36,29 +33,20 @@ public class GlobalControllerAdvice {
         log.error("handleMethodArgumentNotValidException", e);
 
         FieldError firstFieldError = e.getBindingResult().getFieldErrors().get(0);
-        String validationCode = Objects.requireNonNull(firstFieldError.getCode());
-        ErrorCode errorCode = ErrorCode.getBy(validationCode);
-        String message = makeMessage(validationCode, errorCode, firstFieldError.getField());
-        log.error("firstFieldError.getField(): {}", firstFieldError.getField());
+        String validationCode = Objects.requireNonNull(firstFieldError.getCodes())[1];
+        RequestBodyErrorCode requestBodyErrorCode = RequestBodyErrorCode.getBy(validationCode);
         log.error("validationCode: {}", validationCode);
-        log.error("message: {}", message);
+        log.error("requestBodyErrorCode: {name:{}, message:{}}", requestBodyErrorCode.name(), requestBodyErrorCode.getMessage());
 
-        CustomErrorResponse body = new CustomErrorResponse(errorCode, message);
-        return ResponseEntity.status(errorCode.getHttpStatus())
+        CustomErrorResponse body = new CustomErrorResponse(requestBodyErrorCode);
+        return makeResponseEntity(requestBodyErrorCode.getHttpStatus(), body);
+    }
+
+    private static ResponseEntity<?> makeResponseEntity(HttpStatus status, Object body) {
+        return ResponseEntity.status(status)
                 .header(HttpHeaders.CONTENT_ENCODING, Encoding.DEFAULT_CHARSET.name())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
-    }
-
-    private String makeMessage(String validationCode, ErrorCode errorCode, String field) {
-        String message = errorCode.getMessage();
-        if (message == null) {
-            message = messageSource.getMessage(
-                    validationCode,
-                    new String[]{field},
-                    Locale.getDefault());
-        }
-        return message;
     }
 
 }
