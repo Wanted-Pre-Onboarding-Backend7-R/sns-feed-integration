@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Boolean isApproved;
 
-    public static Member createBy(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
+    public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
         return builder().accountName(dto.getAccountName())
                 .email(dto.getEmail())
                 .password(encodedPassword)
