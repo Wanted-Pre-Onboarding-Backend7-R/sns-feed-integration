@@ -30,10 +30,17 @@ class PostServiceConcurrencyTest {
     @DisplayName("게시물 좋아요 기능 멀티 스레드로 동시에 총 1000번 요청")
     public void postLikeMultiThreadRequest1000() throws InterruptedException {
         // given: 좋아요 수가 0인 게시글 설정
-        Post post = new Post("123456789", SnsType.FACEBOOK, "게시글 제목",
-                "게시글 내용", 0L, 0L, 0L,
-                LocalDateTime.of(2023, 7, 7, 5, 23, 33),
-                LocalDateTime.of(2023, 7, 7, 5, 24, 20));
+        Post post = Post.builder()
+                        .contentId("123456789")
+                        .type(SnsType.FACEBOOK)
+                        .title("게시물 제목")
+                        .content("게시물 내용")
+                        .viewCount(0L)
+                        .likeCount(0L)
+                        .shareCount(0L)
+                        .createdAt(LocalDateTime.of(2023, 7, 7, 5, 23, 33))
+                        .updatedAt(LocalDateTime.of(2023, 7, 7, 5, 23, 33))
+                        .build();
         postRepository.save(post);
         assertThat(post.getLikeCount()).isEqualTo(0L);
 
