@@ -15,7 +15,7 @@ public class JoinRequestDTO {
     @NotBlank
     private String accountName;
 
-    @NotBlank(groups = ValidationGroup.NotBlank.class)
+    @NotBlank
     @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$",
             groups = ValidationGroup.Email.class)
     private String email;
