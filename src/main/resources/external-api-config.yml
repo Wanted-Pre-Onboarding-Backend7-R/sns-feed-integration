@@ -7,3 +7,4 @@ external-api:
 
   post-path:
     like: "likes/%s"
+

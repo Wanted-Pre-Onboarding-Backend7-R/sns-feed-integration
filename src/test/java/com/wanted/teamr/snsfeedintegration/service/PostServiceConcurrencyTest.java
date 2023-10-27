@@ -51,7 +51,6 @@ class PostServiceConcurrencyTest {
 
         // when: threadCnt개 만큼 스레드가 멀티스레드 방식으로 총 totalExecutedCnt번 게시글 좋아요 요청
         for (int idx = 0; idx < totalExecutedCnt; idx++) {
-            int finalIdx = idx;
             executorService.execute(() -> {
                 try {
                     postService.likePost(post.getId());
