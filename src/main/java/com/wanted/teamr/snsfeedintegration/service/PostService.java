@@ -4,18 +4,15 @@ import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final SnsService snsService;
-
-    public PostService(final PostRepository postRepository, final SnsService snsService) {
-        this.postRepository = postRepository;
-        this.snsService = snsService;
-    }
 
     @Transactional
     public void likePost(Long postId) {

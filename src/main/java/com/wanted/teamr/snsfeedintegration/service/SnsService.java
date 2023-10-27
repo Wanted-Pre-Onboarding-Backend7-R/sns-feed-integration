@@ -2,6 +2,7 @@ package com.wanted.teamr.snsfeedintegration.service;
 
 import com.wanted.teamr.snsfeedintegration.config.ExternalApiConfig;
 import com.wanted.teamr.snsfeedintegration.domain.SnsType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,14 +11,10 @@ import org.springframework.stereotype.Service;
  * 본 서비스가 아닌 외부 SNS 서비스의 기능을 실제로 동작하기 위해 외부 API를 호출합니다.
  */
 @Service
+@RequiredArgsConstructor
 public class SnsService {
     private final WebClientService webClientService;
     private final ExternalApiConfig externalApiConfig;
-
-    public SnsService(WebClientService webClientService, ExternalApiConfig externalApiConfig) {
-        this.webClientService = webClientService;
-        this.externalApiConfig = externalApiConfig;
-    }
 
     /**
      * 본 서비스가 아닌 실제 외부 SNS 서비스에서의 좋아요 API를 호출하여
