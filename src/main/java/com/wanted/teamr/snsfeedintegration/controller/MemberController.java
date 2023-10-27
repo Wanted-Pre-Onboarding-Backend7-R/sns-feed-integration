@@ -2,6 +2,7 @@ package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
 import com.wanted.teamr.snsfeedintegration.service.MemberService;
+import com.wanted.teamr.snsfeedintegration.util.PasswordValidator;
 import com.wanted.teamr.snsfeedintegration.util.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,9 @@ public class MemberController {
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@Validated(ValidationSequence.class) @RequestBody JoinRequestDTO dto) {
+        PasswordValidator.validatePassword(dto);
         memberService.join(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 }
