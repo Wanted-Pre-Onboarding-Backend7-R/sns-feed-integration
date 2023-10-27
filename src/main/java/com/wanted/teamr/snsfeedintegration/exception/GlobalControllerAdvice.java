@@ -42,7 +42,7 @@ public class GlobalControllerAdvice {
         return makeResponseEntity(requestBodyErrorCode.getHttpStatus(), body);
     }
 
-    private static ResponseEntity<?> makeResponseEntity(HttpStatus status, Object body) {
+    private static ResponseEntity<?> makeResponseEntity(HttpStatus status, CustomErrorResponse body) {
         return ResponseEntity.status(status)
                 .header(HttpHeaders.CONTENT_ENCODING, Encoding.DEFAULT_CHARSET.name())
                 .contentType(MediaType.APPLICATION_JSON)
