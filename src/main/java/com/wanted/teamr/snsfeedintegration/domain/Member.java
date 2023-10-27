@@ -38,7 +38,8 @@ public class Member extends BaseEntity {
     }
 
     public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
-        return builder().accountName(dto.getAccountName())
+        return builder()
+                .accountName(dto.getAccountName())
                 .email(dto.getEmail())
                 .password(encodedPassword)
                 .approvalCode(approvalCode)

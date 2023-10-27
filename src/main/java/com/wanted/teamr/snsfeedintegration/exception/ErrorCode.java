@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode implements ErrorCodeType {
+
     DUPLICATE_ACCOUNT_NAME("이미 같은 이름의 계정이 존재합니다", HttpStatus.BAD_REQUEST),
     PASSWORD_SHORT("비밀번호는 10자 이상이어야 합니다.", HttpStatus.BAD_REQUEST),
     PASSWORD_REPEATED_CHAR("3회 이상 연속되는 문자를 포함한 비밀번호는 사용할 수 없습니다.", HttpStatus.BAD_REQUEST),
