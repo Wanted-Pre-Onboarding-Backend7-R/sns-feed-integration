@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,12 +47,6 @@ class MemberControllerMockTest {
     class Join {
 
         private static final String URI = BASE_URI + "/join";
-        private static final String ACCOUNT_NAME = "myaccount";
-        private static final String EMAIL_HEAD = "example";
-        private static final String EMAIL_DOMAIN = "gmail.com";
-        private static final String EMAIL = EMAIL_HEAD + "@" + EMAIL_DOMAIN;
-        private static final String PASSWORD = "qlalfqjsgh486^^";
-        private static final String BLANK = "  ";
 
         @BeforeEach
         void setUp() {
