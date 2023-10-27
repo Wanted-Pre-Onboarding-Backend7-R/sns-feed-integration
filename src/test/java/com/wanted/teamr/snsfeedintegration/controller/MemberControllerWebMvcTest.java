@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.teamr.snsfeedintegration.dto.JoinRequestDTO;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
 import com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode;
-import com.wanted.teamr.snsfeedintegration.repository.MemberRepository;
 import com.wanted.teamr.snsfeedintegration.security.SecurityConfig;
 import com.wanted.teamr.snsfeedintegration.service.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,8 +37,6 @@ class MemberControllerWebMvcTest {
     private MockMvc mockMvc;
     @MockBean
     private MemberService memberService;
-    @MockBean
-    private MemberRepository memberRepository;
     @Autowired
     private ObjectMapper mapper;
 
@@ -49,6 +49,12 @@ class MemberControllerWebMvcTest {
         private static final String EMAIL = "jeonggoo75@gmail.com";
         private static final String PASSWORD = "qlalfqjsgh486^^";
         private static final String BLANK = "  ";
+
+        @BeforeEach
+        void setUp() {
+            given(memberService.join(any(JoinRequestDTO.class)))
+                    .willReturn(1L);
+        }
 
         @DisplayName("빈 계정 이름")
         @Test
