@@ -110,7 +110,7 @@ class MemberControllerMockTest {
         @DisplayName("성공")
         @Test
         void givenValidInfo_then201() throws Exception {
-            MemberJoinRequest dto = new MemberJoinRequest(ACCOUNT_NAME, EMAIL, PASSWORD);
+            MemberJoinRequest dto = MemberJoinRequest.of(ACCOUNT_NAME, EMAIL, PASSWORD);
             String content = mapper.writeValueAsString(dto);
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +126,7 @@ class MemberControllerMockTest {
                                          String email,
                                          String password,
                                          ErrorCodeType errorCodeType) throws Exception {
-            MemberJoinRequest dto = new MemberJoinRequest(accountName, email, password);
+            MemberJoinRequest dto = MemberJoinRequest.of(accountName, email, password);
             String content = mapper.writeValueAsString(dto);
             String message = errorCodeType.getMessage();
             mockMvc.perform(post(URI)

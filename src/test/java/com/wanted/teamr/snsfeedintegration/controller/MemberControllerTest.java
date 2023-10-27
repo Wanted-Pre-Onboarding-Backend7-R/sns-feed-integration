@@ -59,7 +59,7 @@ class MemberControllerTest {
         }
 
         private ResultActions doJoin() throws Exception {
-            MemberJoinRequest dto = new MemberJoinRequest(ACCOUNT_NAME, EMAIL, PASSWORD);
+            MemberJoinRequest dto = MemberJoinRequest.of(ACCOUNT_NAME, EMAIL, PASSWORD);
             String content = mapper.writeValueAsString(dto);
             return mockMvc.perform(post(URI)
                     .contentType(MediaType.APPLICATION_JSON)

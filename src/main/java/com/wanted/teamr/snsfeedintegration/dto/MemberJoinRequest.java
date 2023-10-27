@@ -3,12 +3,13 @@ package com.wanted.teamr.snsfeedintegration.dto;
 import com.wanted.teamr.snsfeedintegration.util.ValidationGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class MemberJoinRequest {
 
@@ -22,5 +23,9 @@ public class MemberJoinRequest {
 
     @NotBlank
     private String password;
+
+    public static MemberJoinRequest of(String accountName, String email, String password) {
+        return new MemberJoinRequest(accountName, email, password);
+    }
 
 }

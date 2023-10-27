@@ -35,7 +35,7 @@ class MemberServiceTest {
         @Test
         void givenDuplicateAccountName_thenThrowsCustomExceptionByDUPLICATE_ACCOUNT_NAME() {
             // given
-            MemberJoinRequest dto = new MemberJoinRequest("jeonggoo75", "jeonggoo75@gmail.com", "qlalfqjsgh486^^");
+            MemberJoinRequest dto = MemberJoinRequest.of("jeonggoo75", "jeonggoo75@gmail.com", "qlalfqjsgh486^^");
             String encodedPassword = passwordEncoder.encode(dto.getPassword());
             String approvalCode = ApprovalCodeGenerator.generate();
             Member member = Member.of(dto, encodedPassword, approvalCode);
@@ -51,7 +51,7 @@ class MemberServiceTest {
         @Test
         void givenNotDuplicateAccountName_thenSuccess() {
             // given
-            MemberJoinRequest dto = new MemberJoinRequest("sampleuser123", "sampleuser123@gmail.com", "qlalfqjsgh486^^");
+            MemberJoinRequest dto = MemberJoinRequest.of("sampleuser123", "sampleuser123@gmail.com", "qlalfqjsgh486^^");
 
             // when
             Long memberId = sut.join(dto);
