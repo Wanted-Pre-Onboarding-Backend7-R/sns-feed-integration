@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     private Boolean isApproved;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
+    private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
         this.accountName = accountName;
         this.email = email;
         this.password = password;
