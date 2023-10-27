@@ -1,4 +1,4 @@
-package com.wanted.teamr.snsfeedintegration.integration;
+package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.domain.PostHashtag;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class PostApiTest {
+public class PostControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -37,14 +37,25 @@ public class PostApiTest {
     @Test
     void getPost() throws Exception {
         // given
-        Post post = new Post(
-                "12345", SnsType.FACEBOOK, "맛집 탐방 1", "여기 진짜 맛집인정!",
-                100L, 30L, 10L,
-                LocalDateTime.of(2023, 10, 10, 10, 10, 10),
-                LocalDateTime.of(2023, 10, 10, 10, 10, 20)
-        );
-        new PostHashtag(post, "맛집");
-        new PostHashtag(post, "Dani");
+        Post post = Post.builder()
+                .contentId("12345")
+                .type(SnsType.FACEBOOK)
+                .title("맛집 탐방 1")
+                .content("여기 진짜 맛집인정!")
+                .viewCount(100L)
+                .likeCount(30L)
+                .shareCount(10L)
+                .createdAt(LocalDateTime.of(2023, 10, 10, 10, 10, 10))
+                .updatedAt(LocalDateTime.of(2023, 10, 10, 10, 10, 20))
+                .build();
+        PostHashtag.builder()
+                .post(post)
+                .hashtag("맛집")
+                .build();
+        PostHashtag.builder()
+                .post(post)
+                .hashtag("Dani")
+                .build();
         postRepository.save(post);
         Long postId = post.getId();
 
@@ -53,19 +64,19 @@ public class PostApiTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.post.postId").value(postId))
-                .andExpect(jsonPath("$.post.contentId").value("12345"))
-                .andExpect(jsonPath("$.post.type").value("FACEBOOK"))
-                .andExpect(jsonPath("$.post.title").value("맛집 탐방 1"))
-                .andExpect(jsonPath("$.post.content").value("여기 진짜 맛집인정!"))
-                .andExpect(jsonPath("$.post.hashtags").isArray())
-                .andExpect(jsonPath("$.post.hashtags[0]").value("맛집"))
-                .andExpect(jsonPath("$.post.hashtags[1]").value("Dani"))
-                .andExpect(jsonPath("$.post.viewCount").value(100))
-                .andExpect(jsonPath("$.post.likeCount").value(30))
-                .andExpect(jsonPath("$.post.shareCount").value(10))
-                .andExpect(jsonPath("$.post.createdAt").value("2023-10-10T10:10:10"))
-                .andExpect(jsonPath("$.post.updatedAt").value("2023-10-10T10:10:20"));
+                .andExpect(jsonPath("$.postId").value(postId))
+                .andExpect(jsonPath("$.contentId").value("12345"))
+                .andExpect(jsonPath("$.type").value("FACEBOOK"))
+                .andExpect(jsonPath("$.title").value("맛집 탐방 1"))
+                .andExpect(jsonPath("$.content").value("여기 진짜 맛집인정!"))
+                .andExpect(jsonPath("$.hashtags").isArray())
+                .andExpect(jsonPath("$.hashtags[0]").value("맛집"))
+                .andExpect(jsonPath("$.hashtags[1]").value("Dani"))
+                .andExpect(jsonPath("$.viewCount").value(100))
+                .andExpect(jsonPath("$.likeCount").value(30))
+                .andExpect(jsonPath("$.shareCount").value(10))
+                .andExpect(jsonPath("$.createdAt").value("2023-10-10T10:10:10"))
+                .andExpect(jsonPath("$.updatedAt").value("2023-10-10T10:10:20"));
     }
 
     @DisplayName("게시물을 찾을 수 없을 때 에러 응답을 보낸다.")

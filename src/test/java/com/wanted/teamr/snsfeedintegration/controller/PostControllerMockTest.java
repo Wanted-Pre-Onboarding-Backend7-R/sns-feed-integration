@@ -1,8 +1,7 @@
-package com.wanted.teamr.snsfeedintegration.unit.controller;
+package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wanted.teamr.snsfeedintegration.controller.PostController;
-import com.wanted.teamr.snsfeedintegration.dto.PostDto;
+import com.wanted.teamr.snsfeedintegration.dto.PostGetResponse;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.service.PostService;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = PostController.class)
-class PostControllerTest {
+class PostControllerMockTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -41,32 +40,32 @@ class PostControllerTest {
     void getPost() throws Exception {
         // given
         Long postId = 123L;
-        PostDto postDto = new PostDto(
+        PostGetResponse postGetResponse = PostGetResponse.of(
                 postId, "12345", "FACEBOOK", "맛집 탐방 1", "여기 진짜 맛집인정!",
                 List.of("맛집", "Dani"), 100L, 30L, 10L,
                 LocalDateTime.of(2023, 10, 10, 10, 10, 10),
                 LocalDateTime.of(2023, 10, 10, 10, 10, 20)
         );
-        when(postService.getPost(postId)).thenReturn(postDto);
+        when(postService.getPost(postId)).thenReturn(postGetResponse);
 
         // when, then
         mockMvc.perform(get("/api/posts/{postId}", postId))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.post.postId").value(postId))
-                .andExpect(jsonPath("$.post.contentId").value("12345"))
-                .andExpect(jsonPath("$.post.type").value("FACEBOOK"))
-                .andExpect(jsonPath("$.post.title").value("맛집 탐방 1"))
-                .andExpect(jsonPath("$.post.content").value("여기 진짜 맛집인정!"))
-                .andExpect(jsonPath("$.post.hashtags").isArray())
-                .andExpect(jsonPath("$.post.hashtags[0]").value("맛집"))
-                .andExpect(jsonPath("$.post.hashtags[1]").value("Dani"))
-                .andExpect(jsonPath("$.post.viewCount").value(100))
-                .andExpect(jsonPath("$.post.likeCount").value(30))
-                .andExpect(jsonPath("$.post.shareCount").value(10))
-                .andExpect(jsonPath("$.post.createdAt").value("2023-10-10T10:10:10"))
-                .andExpect(jsonPath("$.post.updatedAt").value("2023-10-10T10:10:20"));
+                .andExpect(jsonPath("$.postId").value(postId))
+                .andExpect(jsonPath("$.contentId").value("12345"))
+                .andExpect(jsonPath("$.type").value("FACEBOOK"))
+                .andExpect(jsonPath("$.title").value("맛집 탐방 1"))
+                .andExpect(jsonPath("$.content").value("여기 진짜 맛집인정!"))
+                .andExpect(jsonPath("$.hashtags").isArray())
+                .andExpect(jsonPath("$.hashtags[0]").value("맛집"))
+                .andExpect(jsonPath("$.hashtags[1]").value("Dani"))
+                .andExpect(jsonPath("$.viewCount").value(100))
+                .andExpect(jsonPath("$.likeCount").value(30))
+                .andExpect(jsonPath("$.shareCount").value(10))
+                .andExpect(jsonPath("$.createdAt").value("2023-10-10T10:10:10"))
+                .andExpect(jsonPath("$.updatedAt").value("2023-10-10T10:10:20"));
     }
 
     @DisplayName("게시물을 찾을 수 없을 때 에러 응답을 보낸다.")

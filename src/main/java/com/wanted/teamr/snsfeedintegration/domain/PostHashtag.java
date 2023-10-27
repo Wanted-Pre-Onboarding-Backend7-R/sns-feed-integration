@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,8 @@ public class PostHashtag extends BaseEntity {
     @Column(nullable = false)
     private String hashtag;
 
-    public PostHashtag(Post post, String hashtag) {
+    @Builder
+    private PostHashtag(Post post, String hashtag) {
         setPost(post);
         this.hashtag = hashtag;
     }

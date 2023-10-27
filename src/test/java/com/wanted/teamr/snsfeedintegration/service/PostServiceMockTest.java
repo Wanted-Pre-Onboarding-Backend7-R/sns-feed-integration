@@ -1,13 +1,12 @@
-package com.wanted.teamr.snsfeedintegration.unit.service;
+package com.wanted.teamr.snsfeedintegration.service;
 
 import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.domain.PostHashtag;
 import com.wanted.teamr.snsfeedintegration.domain.SnsType;
-import com.wanted.teamr.snsfeedintegration.dto.PostDto;
+import com.wanted.teamr.snsfeedintegration.dto.PostGetResponse;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.PostRepository;
-import com.wanted.teamr.snsfeedintegration.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +23,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class PostServiceTest {
+class PostServiceMockTest {
 
     @Mock
     PostRepository postRepository;
@@ -37,22 +36,34 @@ class PostServiceTest {
     void getPost() {
         // given
         Long postId = 123L;
-        Post post = new Post(
-                "12345", SnsType.FACEBOOK, "맛집 탐방 1", "여기 진짜 맛집인정!",
-                100L, 30L, 10L,
-                LocalDateTime.of(2023, 10, 10, 10, 10, 10),
-                LocalDateTime.of(2023, 10, 10, 10, 10, 20)
-        );
-        new PostHashtag(post, "맛집");
-        new PostHashtag(post, "Dani");
+        Post post = Post.builder()
+                .contentId("12345")
+                .type(SnsType.FACEBOOK)
+                .title("맛집 탐방 1")
+                .content("여기 진짜 맛집인정!")
+                .viewCount(100L)
+                .likeCount(30L)
+                .shareCount(10L)
+                .createdAt(LocalDateTime.of(2023, 10, 10, 10, 10, 10))
+                .updatedAt(LocalDateTime.of(2023, 10, 10, 10, 10, 20))
+                .build();
+        PostHashtag.builder()
+                .post(post)
+                .hashtag("맛집")
+                .build();
+        PostHashtag.builder()
+                .post(post)
+                .hashtag("Dani")
+                .build();
+        postRepository.save(post);
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         // when
-        PostDto postDto = postService.getPost(postId);
+        PostGetResponse postGetResponse = postService.getPost(postId);
 
         // then
         verify(postRepository).findById(postId);
-        assertThat(postDto).isNotNull()
+        assertThat(postGetResponse).isNotNull()
                 .extracting(
                         "contentId", "type", "title", "content",
                         "hashtags", "viewCount", "likeCount", "shareCount",
