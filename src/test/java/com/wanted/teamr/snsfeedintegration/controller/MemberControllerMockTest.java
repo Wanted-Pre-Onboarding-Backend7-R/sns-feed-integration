@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("/api/members WebMvc 테스트")
 @Import(SecurityConfig.class)
 @WebMvcTest(MemberController.class)
-class MemberControllerWebMvcTest {
+class MemberControllerMockTest {
 
     private static final String BASE_URI = "/api/members";
 
