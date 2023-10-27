@@ -9,7 +9,6 @@ import com.wanted.teamr.snsfeedintegration.util.ApprovalCodeGenerator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("사용자 서비스 통합 테스트")
 @SpringBootTest
 class MemberServiceTest {
 
@@ -28,7 +28,6 @@ class MemberServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @DisplayName("사용자 회원가입 서비스")
-    @Order(1)
     @Nested
     class Join {
 
@@ -52,7 +51,7 @@ class MemberServiceTest {
         @Test
         void givenNotDuplicateAccountName_thenSuccess() {
             // given
-            MemberJoinRequest dto = new MemberJoinRequest("jeonggoo75", "jeonggoo75@gmail.com", "qlalfqjsgh486^^");
+            MemberJoinRequest dto = new MemberJoinRequest("sampleuser123", "sampleuser123@gmail.com", "qlalfqjsgh486^^");
 
             // when
             Long memberId = sut.join(dto);
