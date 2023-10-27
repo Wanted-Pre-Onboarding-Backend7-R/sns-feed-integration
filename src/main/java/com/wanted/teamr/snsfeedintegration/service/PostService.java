@@ -19,7 +19,7 @@ public class PostService {
         Post post = postRepository.findByIdForUpdate(postId)
                                   .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        snsService.likePost(post.getContent(), post.getType());
+        snsService.likePost(post.getContentId(), post.getType());
 
         post.increaseLikeCount();
         postRepository.save(post);
