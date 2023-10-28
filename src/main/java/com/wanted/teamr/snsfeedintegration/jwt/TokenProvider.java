@@ -4,6 +4,7 @@ import com.wanted.teamr.snsfeedintegration.domain.Member;
 import com.wanted.teamr.snsfeedintegration.domain.RefreshToken;
 import com.wanted.teamr.snsfeedintegration.domain.UserDetailsImpl;
 import com.wanted.teamr.snsfeedintegration.dto.TokenDto;
+import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -84,13 +85,13 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            log.info(ErrorCode.MALFORMED_TOKEN.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            log.info(ErrorCode.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            log.info(ErrorCode.WRONG_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.info(ErrorCode.ILLEGAL_TOKEN.getMessage());
         }
         return false;
     }
