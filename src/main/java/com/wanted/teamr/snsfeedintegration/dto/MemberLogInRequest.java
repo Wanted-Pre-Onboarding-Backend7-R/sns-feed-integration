@@ -19,7 +19,7 @@ public class MemberLogInRequest {
         this.password = password;
     }
 
-    public MemberLogInRequest of(String accountName, String password) {
+    public static MemberLogInRequest of(String accountName, String password) {
         return MemberLogInRequest.builder()
                 .accountName(accountName)
                 .password(password)
