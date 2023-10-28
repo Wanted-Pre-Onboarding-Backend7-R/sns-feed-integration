@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     DUPLICATE_ACCOUNT_NAME_ERROR("이미 같은 이름의 계정이 존재합니다", HttpStatus.BAD_REQUEST),
+    POST_NOT_FOUND("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     STATISTICS_HASHTAG_NOT_FOUND("존재하지 않는 해시태그입니다.", HttpStatus.NOT_FOUND),
     STATISTICS_PERIOD_MAX_OVER("최대 통계 기간을 초과하였습니다.", HttpStatus.BAD_REQUEST),
     STATISTICS_PERIOD_INVALID("잘못된 통계 기간입니다.", HttpStatus.BAD_REQUEST),
