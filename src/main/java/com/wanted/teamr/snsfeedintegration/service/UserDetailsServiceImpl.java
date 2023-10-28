@@ -9,21 +9,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String accountName) throws UsernameNotFoundException {
-        Optional<Member> optionalMember = memberRepository.findByAccountName(accountName);
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-            return UserDetailsImpl.of(member);
-        }
-        throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+    public UserDetails loadUserByUsername(String accountName) {
+        Member member = memberRepository.findByAccountName(accountName)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return UserDetailsImpl.of(member);
+
     }
 
 }
