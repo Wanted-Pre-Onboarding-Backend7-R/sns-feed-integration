@@ -62,15 +62,10 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        RefreshToken refreshTokenObject = new RefreshToken(member, refreshToken);
+        RefreshToken refreshTokenObject = RefreshToken.of(member, refreshToken);
         refreshTokenRepository.save(refreshTokenObject);
 
-        return TokenDto.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-                .refreshToken(refreshToken)
-                .build();
+        return TokenDto.of(BEARER_TYPE, accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,10 +9,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDetailsImpl implements UserDetails {
     private Member member;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    private UserDetailsImpl(Member member) {
+        this.member = member;
+    }
+
+    public static UserDetailsImpl of(Member member) {
+        return builder().member(member).build();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

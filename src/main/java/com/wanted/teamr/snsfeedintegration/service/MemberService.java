@@ -1,7 +1,7 @@
 package com.wanted.teamr.snsfeedintegration.service;
 
 import com.wanted.teamr.snsfeedintegration.domain.Member;
-import com.wanted.teamr.snsfeedintegration.dto.MemberLogInRequestDto;
+import com.wanted.teamr.snsfeedintegration.dto.MemberLogInRequest;
 import com.wanted.teamr.snsfeedintegration.dto.TokenDto;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
@@ -22,11 +22,11 @@ public class MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
 
-    public void login(MemberLogInRequestDto memberLogInRequestDto, HttpServletResponse response) {
-        Member member = memberRepository.findByAccountName(memberLogInRequestDto.getAccountName())
+    public void login(MemberLogInRequest memberLogInRequest, HttpServletResponse response) {
+        Member member = memberRepository.findByAccountName(memberLogInRequest.getAccountName())
                 .orElseThrow(() -> new CustomException(ErrorCode.WRONG_ACCOUNT_INFO));
 
-        if (!bCryptPasswordEncoder.matches(memberLogInRequestDto.getPassword(), member.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(memberLogInRequest.getPassword(), member.getPassword())) {
             throw new CustomException(ErrorCode.WRONG_ACCOUNT_INFO);
         }
 

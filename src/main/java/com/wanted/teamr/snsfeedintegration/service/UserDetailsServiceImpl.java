@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<Member> optionalMember = memberRepository.findByAccountName(accountName);
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            return new UserDetailsImpl(member);
+            return UserDetailsImpl.of(member);
         }
         throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
     }
