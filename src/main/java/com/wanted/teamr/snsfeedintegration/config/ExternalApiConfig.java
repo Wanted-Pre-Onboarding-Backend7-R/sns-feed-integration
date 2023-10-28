@@ -14,7 +14,7 @@ import java.util.Map;
  * 생성했으며, sns api 기준 {@code Map<String, String>} 타입으로 관리됩니다.
  * <p>
  * sns api 기준으로 {@code snsApiDomains.get("instagram")}으로 조회하면
- * {@code "https://www.facebook.com/"}을 반환합니다.
+ * {@code "https://www.instagram.com/"}을 반환합니다.
  */
 @Getter
 @Component

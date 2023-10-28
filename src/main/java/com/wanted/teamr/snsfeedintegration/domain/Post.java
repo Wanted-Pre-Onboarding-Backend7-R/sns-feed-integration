@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,16 +47,14 @@ public class Post extends BaseEntity {
     private Long shareCount;
 
     @Column(nullable = false)
-    @CreatedDate
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @Builder
-    private Post(String contentId, SnsType type, String title, String content,
-                 Long viewCount, Long likeCount, Long shareCount, LocalDateTime createdAt,
-                 LocalDateTime updatedAt) {
+    private Post(String contentId, SnsType type,
+                 String title, String content, Long viewCount, Long likeCount,
+                 Long shareCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.contentId = contentId;
         this.type = type;
         this.title = title;
@@ -73,4 +69,5 @@ public class Post extends BaseEntity {
     public void increaseLikeCount() {
         likeCount += 1;
     }
+
 }
