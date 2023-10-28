@@ -99,7 +99,7 @@ class StatisticsServiceTest {
     }
 
     @Test
-    @DisplayName("일자별 viewCount 통계를 조회할 수 있다.")
+    @DisplayName("일자별 likeCount 통계를 조회할 수 있다.")
     void getStatistics_daily_likeCount() {
         //given
         StatisticsGetRequest request = StatisticsGetRequest.of(
@@ -122,7 +122,7 @@ class StatisticsServiceTest {
     }
 
     @Test
-    @DisplayName("일자별 viewCount 통계를 조회할 수 있다.")
+    @DisplayName("일자별 shareCount 통계를 조회할 수 있다.")
     void getStatistics_daily_shareCount() {
         //given
         StatisticsGetRequest request = StatisticsGetRequest.of(
@@ -161,11 +161,11 @@ class StatisticsServiceTest {
 
         //then
         assertThat(responses.size()).isEqualTo(3);
-        assertThat(responses.get(0).getStatisticsAt()).isEqualTo("2023-10-01 12");
+        assertThat(responses.get(0).getStatisticsAt()).isEqualTo("2023-10-01T12");
         assertThat(responses.get(0).getCount()).isEqualTo(1);
-        assertThat(responses.get(1).getStatisticsAt()).isEqualTo("2023-10-01 13");
+        assertThat(responses.get(1).getStatisticsAt()).isEqualTo("2023-10-01T13");
         assertThat(responses.get(1).getCount()).isEqualTo(1);
-        assertThat(responses.get(2).getStatisticsAt()).isEqualTo("2023-10-01 14");
+        assertThat(responses.get(2).getStatisticsAt()).isEqualTo("2023-10-01T14");
         assertThat(responses.get(2).getCount()).isEqualTo(1);
     }
 
@@ -219,7 +219,7 @@ class StatisticsServiceTest {
         StatisticsGetRequest request = StatisticsGetRequest.of(
                 null,
                 HOUR,
-                LocalDateTime.of(2023, 10, 1, 0, 0, 0),
+                LocalDateTime.of(2100, 1, 1, 0, 0, 0),
                 null,
                 COUNT
         );

@@ -27,7 +27,7 @@ public class PostHashtagRepositoryImpl implements PostHashtagRepositoryCustom {
     public List<StatisticsGetResponse> getCountByCreatedAt(StatisticsGetRequest request) {
         String datetimeFormat = "%Y-%m-%d";
         if (StatisticsType.HOUR == request.getType()) {
-            datetimeFormat += " %H";
+            datetimeFormat += "T%H";
         }
 
         StringTemplate formattedDate = Expressions.stringTemplate(
