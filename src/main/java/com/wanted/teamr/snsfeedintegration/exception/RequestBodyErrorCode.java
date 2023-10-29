@@ -13,6 +13,7 @@ public enum RequestBodyErrorCode implements ErrorCodeType {
     PASSWORD_BLANK("비밀번호는 공백일 수 없습니다.", HttpStatus.BAD_REQUEST, "NotBlank.password"),
     APPROVAL_CODE_BLANK("승인코드는 공백일 수 없습니다.", HttpStatus.BAD_REQUEST, "NotBlank.approvalCode"),
     EMAIL_INVALID_FORMAT("이메일 형식이 유효하지 않습니다.", HttpStatus.BAD_REQUEST, "Email.email"),
+    APPROVAL_CODE_INVALID_FORMAT("승인코드 형식이 유효하지 않습니다.", HttpStatus.BAD_REQUEST, "Pattern.approvalCode"),
     ;
 
     private final String message;
