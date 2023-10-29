@@ -163,6 +163,13 @@ class MemberControllerMockTest {
             validateRequestBody(ACCOUNT_NAME, PASSWORD, BLANK, RequestBodyErrorCode.APPROVAL_CODE_BLANK);
         }
 
+        @DisplayName("[승인코드] 유효하지 않은 형식")
+        @ParameterizedTest
+        @ValueSource(strings = {"1235A", "1235AAA", "sd12A&"})
+        void givenInvalidApprovalCodeFormat_then400(String approvalCode) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, PASSWORD, approvalCode, RequestBodyErrorCode.APPROVAL_CODE_INVALID_FORMAT);
+        }
+
         private void validateRequestBody(String accountName,
                                          String password,
                                          String approvalCode,
