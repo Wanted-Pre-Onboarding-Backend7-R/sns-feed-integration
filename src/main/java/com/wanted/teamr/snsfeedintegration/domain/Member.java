@@ -1,8 +1,15 @@
 package com.wanted.teamr.snsfeedintegration.domain;
 
+import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends BaseEntity {
 
@@ -20,5 +27,24 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean isApproved;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
+        this.accountName = accountName;
+        this.email = email;
+        this.password = password;
+        this.approvalCode = approvalCode;
+        this.isApproved = isApproved;
+    }
+
+    public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
+        return builder()
+                .accountName(dto.getAccountName())
+                .email(dto.getEmail())
+                .password(encodedPassword)
+                .approvalCode(approvalCode)
+                .isApproved(false)
+                .build();
+    }
 
 }
