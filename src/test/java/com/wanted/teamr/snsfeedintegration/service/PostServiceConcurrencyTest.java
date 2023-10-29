@@ -55,7 +55,7 @@ class PostServiceConcurrencyTest {
                 try {
                     postService.likePost(post.getId());
                 } catch (CustomException ex) {
-                    System.out.println(ex.getErrorCode());
+                    System.out.println(ex.getErrorCodeType());
                 } catch (Exception ex) {
                     System.out.println(ex);
                 } finally {
@@ -72,4 +72,5 @@ class PostServiceConcurrencyTest {
         assertThat(samePost.getLikeCount()).isEqualTo(totalExecutedCnt);
         postRepository.delete(samePost);
     }
+
 }
