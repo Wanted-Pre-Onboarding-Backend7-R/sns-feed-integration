@@ -135,6 +135,34 @@ class MemberServiceTest {
                     .mapToObj(i -> ApprovalCodeGenerator.generate());
         }
 
+        @Order(1)
+        @DisplayName("성공")
+        @Test
+        void whenSuccess_thenMemberIsApproved() {
+            // given
+            MemberApprovalRequest dto = MemberApprovalRequest.of(ACCOUNT_NAME, PASSWORD, approvalCode);
+
+            // when
+            sut.approve(dto);
+
+            // then
+            Member member = memberRepository.findByAccountName(ACCOUNT_NAME).orElseThrow();
+            assertThat(member.getIsApproved()).isTrue();
+        }
+
+        @Order(2)
+        @DisplayName("이미 가입승인 완료")
+        @Test
+        void givenAlreadyApproved_thenThrowsWithALREADY_APPROVED() {
+            // given
+            MemberApprovalRequest dto = MemberApprovalRequest.of(ACCOUNT_NAME, PASSWORD, approvalCode);
+
+            // when, then
+            assertThatThrownBy(() -> sut.approve(dto))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.ALREADY_APPROVED.getMessage());
+        }
+
     }
 
 }
