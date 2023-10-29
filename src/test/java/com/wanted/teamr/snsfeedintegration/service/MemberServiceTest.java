@@ -94,6 +94,19 @@ class MemberServiceTest {
                     .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
         }
 
+        @DisplayName("[비밀번호] 불일치")
+        @ValueSource(strings = {"qlalfqjsgh479^^", "qlalfqjsgh486^", "qlalfqjsgh4866^^"})
+        @ParameterizedTest
+        void givenWrongPassword_thenThrowsWithACCOUNT_INFO_WRONG(String accountName) {
+            // given
+            MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, PASSWORD, approvalCode);
+
+            // when, then
+            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
+        }
+
     }
 
 }
