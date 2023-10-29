@@ -128,17 +128,7 @@ class MemberControllerMockTest {
                                          String password,
                                          ErrorCodeType errorCodeType) throws Exception {
             MemberJoinRequest dto = MemberJoinRequest.of(accountName, email, password);
-            String content = mapper.writeValueAsString(dto);
-            String message = errorCodeType.getMessage();
-            mockMvc.perform(post(URI)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(content)
-                    )
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
-                    .andExpect(jsonPath("$.message").value(message))
-                    .andDo(print())
-                    .andReturn();
+            MemberControllerMockTest.this.validateRequestBody(dto, errorCodeType, URI);
         }
 
     }
@@ -178,19 +168,25 @@ class MemberControllerMockTest {
                                          String approvalCode,
                                          ErrorCodeType errorCodeType) throws Exception {
             MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, password, approvalCode);
-            String content = mapper.writeValueAsString(dto);
-            String message = errorCodeType.getMessage();
-            mockMvc.perform(post(URI)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(content)
-                    )
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
-                    .andExpect(jsonPath("$.message").value(message))
-                    .andDo(print())
-                    .andReturn();
+            MemberControllerMockTest.this.validateRequestBody(dto, errorCodeType, URI);
         }
 
+    }
+
+    private void validateRequestBody(Object dto,
+                                     ErrorCodeType errorCodeType,
+                                     String uri) throws Exception {
+        String content = mapper.writeValueAsString(dto);
+        String message = errorCodeType.getMessage();
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
+                .andExpect(jsonPath("$.message").value(message))
+                .andDo(print())
+                .andReturn();
     }
 
 }
