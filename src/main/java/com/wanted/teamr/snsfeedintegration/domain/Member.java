@@ -1,6 +1,8 @@
 package com.wanted.teamr.snsfeedintegration.domain;
 
 import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
+import com.wanted.teamr.snsfeedintegration.exception.CustomException;
+import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
@@ -45,6 +47,13 @@ public class Member extends BaseEntity {
                 .approvalCode(approvalCode)
                 .isApproved(false)
                 .build();
+    }
+
+    public void approve() {
+        if (getIsApproved()) {
+            throw new CustomException(ErrorCode.ALREADY_APPROVED);
+        }
+        isApproved = true;
     }
 
 }
