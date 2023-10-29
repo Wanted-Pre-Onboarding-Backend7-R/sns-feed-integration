@@ -20,6 +20,7 @@ import java.util.Optional;
 import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 @DisplayName("사용자 서비스 Mock 테스트")
@@ -107,6 +108,38 @@ class MemberServiceMockTest {
             Assertions.assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.APPROVAL_CODE_WRONG.getMessage());
+        }
+
+        @DisplayName("이미 가입승인 완료")
+        @Test
+        void givenJoinHaveAlreadyApproved_thenThrowsWithALREADY_APPROVED() {
+            // given
+            MemberApprovalRequest dto = mock(MemberApprovalRequest.class);
+            Member member = mock(Member.class);
+
+            given(dto.getAccountName())
+                    .willReturn(ACCOUNT_NAME);
+            given(memberRepository.findByAccountName(anyString()))
+                    .willReturn(Optional.of(member));
+
+            given(member.getPassword())
+                    .willReturn(PASSWORD);
+            given(dto.getPassword())
+                    .willReturn(PASSWORD);
+            given(passwordEncoder.matches(dto.getPassword(), member.getPassword()))
+                    .willReturn(true);
+
+            given(dto.getApprovalCode())
+                    .willReturn(APPROVAL_CODE);
+            given(member.getApprovalCode())
+                    .willReturn(APPROVAL_CODE);
+
+            doThrow(CustomException.class)
+                    .when(member).approve();
+
+            // when, then
+            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+                    .isInstanceOf(CustomException.class);
         }
 
     }
