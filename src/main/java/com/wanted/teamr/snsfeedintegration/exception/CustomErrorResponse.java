@@ -8,9 +8,9 @@ public class CustomErrorResponse {
     private final String errorCode;
     private final String message;
 
-    public CustomErrorResponse(ErrorCode errorCode) {
-        this.errorCode = errorCode.name();
-        this.message = errorCode.getMessage();
+    public CustomErrorResponse(ErrorCodeType errorCodeType) {
+        errorCode = errorCodeType.name();
+        message = errorCodeType.getMessage();
     }
 
 }
