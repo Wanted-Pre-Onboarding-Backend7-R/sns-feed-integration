@@ -1,0 +1,10 @@
+external-api:
+  sns-api-domains:
+    instagram: "https://www.instagram.com/"
+    facebook: "https://www.facebook.com/"
+    twitter: "https://www.twitter.com/"
+    threads: "https://www.threads.net/"
+
+  post-path:
+    like: "likes/%s"
+

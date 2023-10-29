@@ -66,4 +66,8 @@ public class Post extends BaseEntity {
         this.updatedAt = updatedAt;
     }
 
+    public void increaseLikeCount() {
+        likeCount += 1;
+    }
+
 }
