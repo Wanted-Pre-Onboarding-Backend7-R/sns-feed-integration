@@ -7,7 +7,6 @@ import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.MemberRepository;
 import com.wanted.teamr.snsfeedintegration.util.ApprovalCodeGenerator;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,6 +20,7 @@ import java.util.stream.Stream;
 
 import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("사용자 서비스 통합 테스트")
@@ -48,7 +48,7 @@ class MemberServiceTest {
             MemberJoinRequest dto = MemberJoinRequest.of(ACCOUNT_NAME, EMAIL, PASSWORD);
 
             // when, then
-            Assertions.assertThatThrownBy(() -> sut.join(dto))
+            assertThatThrownBy(() -> sut.join(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.DUPLICATE_ACCOUNT_NAME.getMessage());
         }
@@ -74,6 +74,7 @@ class MemberServiceTest {
 
     }
 
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("사용자 가입승인 서비스")
     @Order(2)
     @Nested
@@ -94,7 +95,7 @@ class MemberServiceTest {
             MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, PASSWORD, approvalCode);
 
             // when, then
-            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+            assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
         }
@@ -107,7 +108,7 @@ class MemberServiceTest {
             MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, PASSWORD, approvalCode);
 
             // when, then
-            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+            assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
         }
@@ -124,7 +125,7 @@ class MemberServiceTest {
             MemberApprovalRequest dto = MemberApprovalRequest.of(ACCOUNT_NAME, PASSWORD, approvalCode);
 
             // when, then
-            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+            assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.APPROVAL_CODE_WRONG.getMessage());
         }
