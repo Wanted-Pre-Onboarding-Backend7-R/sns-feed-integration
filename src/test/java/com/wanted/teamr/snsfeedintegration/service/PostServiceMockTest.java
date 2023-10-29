@@ -87,7 +87,7 @@ class PostServiceMockTest {
         // when, then
         assertThatThrownBy(() -> postService.getPost(postId))
                 .isInstanceOf(CustomException.class)
-                .extracting("errorCode")
+                .extracting("errorCodeType")
                 .isEqualTo(ErrorCode.POST_NOT_FOUND);
     }
 
