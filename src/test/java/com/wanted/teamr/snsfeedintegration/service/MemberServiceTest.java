@@ -6,13 +6,18 @@ import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.MemberRepository;
+import com.wanted.teamr.snsfeedintegration.util.ApprovalCodeGenerator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,6 +110,28 @@ class MemberServiceTest {
             Assertions.assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
+        }
+
+        @DisplayName("[승인코드] 불일치")
+        @MethodSource("getApprovalCodeStream")
+        @ParameterizedTest
+        void givenWrongApprovalCode_thenThrowsWithACCOUNT_INFO_WRONG(String approvalCode) {
+            if (approvalCode.equals(this.approvalCode)) {
+                return;
+            }
+
+            // given
+            MemberApprovalRequest dto = MemberApprovalRequest.of(ACCOUNT_NAME, PASSWORD, approvalCode);
+
+            // when, then
+            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.APPROVAL_CODE_WRONG.getMessage());
+        }
+
+        private static Stream<String> getApprovalCodeStream() {
+            return IntStream.range(0, 5)
+                    .mapToObj(i -> ApprovalCodeGenerator.generate());
         }
 
     }
