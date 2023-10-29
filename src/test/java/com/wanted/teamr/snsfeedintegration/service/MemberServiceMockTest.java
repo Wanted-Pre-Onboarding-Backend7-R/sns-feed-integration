@@ -20,8 +20,8 @@ import java.util.Optional;
 import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @DisplayName("사용자 서비스 Mock 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -140,6 +140,37 @@ class MemberServiceMockTest {
             // when, then
             Assertions.assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class);
+        }
+
+        @DisplayName("성공")
+        @Test
+        void whenSuccess_thenMemberApproveCalled() {
+            // given
+            MemberApprovalRequest dto = mock(MemberApprovalRequest.class);
+            Member member = mock(Member.class);
+
+            given(dto.getAccountName())
+                    .willReturn(ACCOUNT_NAME);
+            given(memberRepository.findByAccountName(anyString()))
+                    .willReturn(Optional.of(member));
+
+            given(member.getPassword())
+                    .willReturn(PASSWORD);
+            given(dto.getPassword())
+                    .willReturn(PASSWORD);
+            given(passwordEncoder.matches(dto.getPassword(), member.getPassword()))
+                    .willReturn(true);
+
+            given(dto.getApprovalCode())
+                    .willReturn(APPROVAL_CODE);
+            given(member.getApprovalCode())
+                    .willReturn(APPROVAL_CODE);
+
+            // when, then
+            sut.approve(dto);
+
+            // then
+            then(member).should(times(1)).approve();
         }
 
     }
