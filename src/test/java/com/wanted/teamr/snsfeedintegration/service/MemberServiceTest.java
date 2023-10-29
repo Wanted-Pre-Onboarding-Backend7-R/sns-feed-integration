@@ -5,17 +5,16 @@ import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.MemberRepository;
-import com.wanted.teamr.snsfeedintegration.util.ApprovalCodeGenerator;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @DisplayName("사용자 서비스 통합 테스트")
 @SpringBootTest
 class MemberServiceTest {
@@ -28,18 +27,17 @@ class MemberServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @DisplayName("사용자 회원가입 서비스")
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @Order(1)
     @Nested
     class Join {
 
         @DisplayName("계정 이름 중복")
+        @Order(2)
         @Test
         void givenDuplicateAccountName_thenThrowsCustomExceptionByDUPLICATE_ACCOUNT_NAME() {
             // given
-            MemberJoinRequest dto = MemberJoinRequest.of("jeonggoo75", "jeonggoo75@gmail.com", "qlalfqjsgh486^^");
-            String encodedPassword = passwordEncoder.encode(dto.getPassword());
-            String approvalCode = ApprovalCodeGenerator.generate();
-            Member member = Member.of(dto, encodedPassword, approvalCode);
-            memberRepository.save(member);
+            MemberJoinRequest dto = MemberJoinRequest.of(ACCOUNT_NAME, EMAIL, PASSWORD);
 
             // when, then
             Assertions.assertThatThrownBy(() -> sut.join(dto))
@@ -48,10 +46,11 @@ class MemberServiceTest {
         }
 
         @DisplayName("성공")
+        @Order(1)
         @Test
         void givenNotDuplicateAccountName_thenSuccess() {
             // given
-            MemberJoinRequest dto = MemberJoinRequest.of("sampleuser123", "sampleuser123@gmail.com", "qlalfqjsgh486^^");
+            MemberJoinRequest dto = MemberJoinRequest.of(ACCOUNT_NAME, EMAIL, PASSWORD);
 
             // when
             Long memberId = sut.join(dto);
