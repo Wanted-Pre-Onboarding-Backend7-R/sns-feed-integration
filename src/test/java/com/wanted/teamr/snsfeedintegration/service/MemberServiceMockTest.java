@@ -17,8 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.ACCOUNT_NAME;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.PASSWORD;
+import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -80,6 +79,34 @@ class MemberServiceMockTest {
             Assertions.assertThatThrownBy(() -> sut.approve(dto))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ErrorCode.ACCOUNT_INFO_WRONG.getMessage());
+        }
+
+        @DisplayName("[승인코드] 불일치")
+        @Test
+        void givenWrongApprovalCode_thenThrowsWithAPPROVAL_CODE_WRONG() {
+            // given
+            Member member = mock(Member.class);
+            given(memberRepository.findByAccountName(anyString()))
+                    .willReturn(Optional.of(member));
+
+            MemberApprovalRequest dto = mock(MemberApprovalRequest.class);
+            given(dto.getAccountName())
+                    .willReturn(ACCOUNT_NAME);
+            given(member.getPassword())
+                    .willReturn(PASSWORD);
+            given(dto.getPassword())
+                    .willReturn(PASSWORD);
+            given(passwordEncoder.matches(dto.getPassword(), member.getPassword()))
+                    .willReturn(true);
+            given(dto.getApprovalCode())
+                    .willReturn("wrongApprovalCode");
+            given(member.getApprovalCode())
+                    .willReturn(APPROVAL_CODE);
+
+            // when, then
+            Assertions.assertThatThrownBy(() -> sut.approve(dto))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.APPROVAL_CODE_WRONG.getMessage());
         }
 
     }
