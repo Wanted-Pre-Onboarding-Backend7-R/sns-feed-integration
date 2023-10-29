@@ -1,11 +1,8 @@
 package com.wanted.teamr.snsfeedintegration.service;
 
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.DATE;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.HOUR;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.COUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.LIKECOUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.SHARECOUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.VIEWCOUNT;
+import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.*;
+import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.*;
+import static com.wanted.teamr.snsfeedintegration.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -209,7 +206,8 @@ class StatisticsServiceTest {
 
         //when then
         assertThatThrownBy(() -> statisticsService.getStatistics(request, memberAccountName))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class)
+                .hasMessage(STATISTICS_HASHTAG_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -226,7 +224,8 @@ class StatisticsServiceTest {
 
         //when then
         assertThatThrownBy(() -> statisticsService.getStatistics(request, memberAccountName))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class)
+                .hasMessage(STATISTICS_PERIOD_INVALID.getMessage());
     }
 
     @Test
@@ -243,7 +242,8 @@ class StatisticsServiceTest {
 
         //when then
         assertThatThrownBy(() -> statisticsService.getStatistics(request, memberAccountName))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class)
+                .hasMessage(STATISTICS_PERIOD_INVALID.getMessage());
     }
 
     @Test
@@ -260,7 +260,8 @@ class StatisticsServiceTest {
 
         //when then
         assertThatThrownBy(() -> statisticsService.getStatistics(request, memberAccountName))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class)
+                .hasMessage(STATISTICS_PERIOD_INVALID.getMessage());
     }
 
     @Test
@@ -277,6 +278,7 @@ class StatisticsServiceTest {
 
         //when then
         assertThatThrownBy(() -> statisticsService.getStatistics(request, memberAccountName))
-                .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class)
+                .hasMessage(STATISTICS_PERIOD_INVALID.getMessage());
     }
 }

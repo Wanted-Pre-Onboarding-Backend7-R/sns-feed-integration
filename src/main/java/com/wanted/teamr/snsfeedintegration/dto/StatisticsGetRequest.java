@@ -6,14 +6,21 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 public class StatisticsGetRequest {
 
     private String hashtag;
+
     private final StatisticsType type;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime start;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime end;
+
     private StatisticsValue value;
 
     @Builder(access = AccessLevel.PRIVATE)

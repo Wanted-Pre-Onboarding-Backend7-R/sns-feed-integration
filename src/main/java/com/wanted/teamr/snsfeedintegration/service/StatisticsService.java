@@ -100,7 +100,7 @@ public class StatisticsService {
 
         LocalDateTime limitDateTime = end.minusDays(maxPeriod);
         if (start.isBefore(limitDateTime) || start.isEqual(limitDateTime)) {
-            throw new CustomException(STATISTICS_PERIOD_MAX_OVER);
+            throw new CustomException(STATISTICS_PERIOD_INVALID);
         }
     }
 

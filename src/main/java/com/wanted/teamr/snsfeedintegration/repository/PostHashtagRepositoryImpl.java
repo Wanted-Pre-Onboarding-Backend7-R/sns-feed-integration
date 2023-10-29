@@ -3,7 +3,7 @@ package com.wanted.teamr.snsfeedintegration.repository;
 import static com.wanted.teamr.snsfeedintegration.domain.QPost.post;
 import static com.wanted.teamr.snsfeedintegration.domain.QPostHashtag.postHashtag;
 import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.*;
-import static com.wanted.teamr.snsfeedintegration.exception.ErrorCode.*;
+import static com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode.*;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -63,7 +63,7 @@ public class PostHashtagRepositoryImpl implements PostHashtagRepositoryCustom {
         } else if (VIEWCOUNT == statisticsValue) {
             return post.viewCount.sum();
         } else {
-            throw new CustomException(STATISTICS_STATISTICSVALUE_NOT_FOUND);
+            throw new CustomException(STATISTICS_STATISTICSVALUE_INVALID);
         }
     }
 }

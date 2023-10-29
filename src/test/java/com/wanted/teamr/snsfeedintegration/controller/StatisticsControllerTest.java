@@ -1,17 +1,14 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.DATE;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.HOUR;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.COUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.LIKECOUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.SHARECOUNT;
-import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.VIEWCOUNT;
+import static com.wanted.teamr.snsfeedintegration.domain.StatisticsType.*;
+import static com.wanted.teamr.snsfeedintegration.domain.StatisticsValue.*;
+import static com.wanted.teamr.snsfeedintegration.exception.ErrorCode.*;
+import static com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,8 +182,8 @@ class StatisticsControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.STATISTICS_HASHTAG_NOT_FOUND.name()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.STATISTICS_HASHTAG_NOT_FOUND.getMessage()));
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_HASHTAG_NOT_FOUND.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_HASHTAG_NOT_FOUND.getMessage()));
     }
 
     @Test
@@ -200,8 +197,8 @@ class StatisticsControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.name()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.getMessage()));
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_PERIOD_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_PERIOD_INVALID.getMessage()));
     }
 
     @Test
@@ -215,8 +212,8 @@ class StatisticsControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.name()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.getMessage()));
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_PERIOD_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_PERIOD_INVALID.getMessage()));
     }
 
     @Test
@@ -231,8 +228,8 @@ class StatisticsControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.name()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.getMessage()));
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_PERIOD_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_PERIOD_INVALID.getMessage()));
     }
 
     @Test
@@ -247,7 +244,74 @@ class StatisticsControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.name()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.STATISTICS_PERIOD_MAX_OVER.getMessage()));
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_PERIOD_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_PERIOD_INVALID.getMessage()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("유효하지 않은 통계유형으로 통계를 조회할 수 없다.")
+    void getStatistics_invalidType() throws Exception {
+        //given, when, then
+        mockMvc.perform(get("/api/statistics")
+                        .param("type", "TIME")
+                        .param("start", "2023-01-01T00:00:00")
+                        .param("end", "2023-01-08T23:59:59")
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_STATISTICSTYPE_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_STATISTICSTYPE_INVALID.getMessage()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("유효하지 않은 통계값으로 통계를 조회할 수 없다.")
+    void getStatistics_invalidValue() throws Exception {
+        //given, when, then
+        mockMvc.perform(get("/api/statistics")
+                        .param("type", DATE.name())
+                        .param("start", "2023-01-01T00:00:00")
+                        .param("end", "2023-01-08T23:59:59")
+                        .param("value", "TEST")
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_STATISTICSVALUE_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_STATISTICSVALUE_INVALID.getMessage()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("유효하지 않은 통계 시작일시로 통계를 조회할 수 없다.")
+    void getStatistics_invalidStart() throws Exception {
+        //given, when, then
+        mockMvc.perform(get("/api/statistics")
+                        .param("type", DATE.name())
+                        .param("start", "2023.01.01T00:00:00")
+                        .param("end", "2023-01-08T23:59:59")
+                        .param("value", "TEST")
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_START_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_START_INVALID.getMessage()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("유효하지 않은 통계 종료일시로 통계를 조회할 수 없다.")
+    void getStatistics_invalidEnd() throws Exception {
+        //given, when, then
+        mockMvc.perform(get("/api/statistics")
+                        .param("type", DATE.name())
+                        .param("start", "2023-01-01T00:00:00")
+                        .param("end", "2023.01.08T23:59:59")
+                        .param("value", "TEST")
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(STATISTICS_END_INVALID.name()))
+                .andExpect(jsonPath("$.message").value(STATISTICS_END_INVALID.getMessage()));
     }
 }
