@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("/api/members WebMvc 테스트")
+@DisplayName("/api/members WebMvc")
 @Import(SecurityConfig.class)
 @WebMvcTest(MemberController.class)
 class MemberControllerMockTest {
@@ -43,7 +43,7 @@ class MemberControllerMockTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @DisplayName("사용자 회원가입 WebMvc")
+    @DisplayName("/join 사용자 회원가입 WebMvc")
     @Nested
     class Join {
 
@@ -55,25 +55,25 @@ class MemberControllerMockTest {
                     .willReturn(1L);
         }
 
-        @DisplayName("빈 계정 이름")
+        @DisplayName("[계정 이름] 공백")
         @Test
         void givenBlankAccountName_then400() throws Exception {
             validateRequestBody(BLANK, EMAIL, PASSWORD, RequestBodyErrorCode.ACCOUNT_NAME_BLANK);
         }
 
-        @DisplayName("빈 이메일")
+        @DisplayName("[이메일] 공백")
         @Test
         void givenBlankEmail_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, BLANK, PASSWORD, RequestBodyErrorCode.EMAIL_BLANK);
         }
 
-        @DisplayName("빈 비밀번호")
+        @DisplayName("[비밀번호] 공백")
         @Test
         void givenBlankPassword_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, EMAIL, BLANK, RequestBodyErrorCode.PASSWORD_BLANK);
         }
 
-        @DisplayName("잘못된 이메일 형식")
+        @DisplayName("[이메일] 잘못된 형식")
         @ValueSource(strings = {"wrong_email@", "@a.com", "aa.com", "a.d@s"})
         @ParameterizedTest
         void givenInvalidEmailFormat_then400(String email) throws Exception {
@@ -133,7 +133,7 @@ class MemberControllerMockTest {
 
     }
 
-    @DisplayName("사용자 가입승인 WebMvc")
+    @DisplayName("/approve 사용자 가입승인 WebMvc")
     @Nested
     class Approve {
 
@@ -145,19 +145,19 @@ class MemberControllerMockTest {
                     .willReturn(1L);
         }
 
-        @DisplayName("빈 계정 이름")
+        @DisplayName("[계정 이름] 공백")
         @Test
         void givenBlankAccountName_then400() throws Exception {
             validateRequestBody(BLANK, PASSWORD, APPROVAL_CODE, RequestBodyErrorCode.ACCOUNT_NAME_BLANK);
         }
 
-        @DisplayName("빈 비밀번호")
+        @DisplayName("[비밀번호] 공백")
         @Test
         void givenBlankPassword_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, BLANK, APPROVAL_CODE, RequestBodyErrorCode.PASSWORD_BLANK);
         }
 
-        @DisplayName("빈 승인코드")
+        @DisplayName("[승인코드] 공백")
         @Test
         void givenBlankApprovalCode_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, PASSWORD, BLANK, RequestBodyErrorCode.APPROVAL_CODE_BLANK);
