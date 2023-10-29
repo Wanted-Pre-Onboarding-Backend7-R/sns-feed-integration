@@ -1,6 +1,7 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wanted.teamr.snsfeedintegration.dto.MemberApprovalRequest;
 import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
@@ -127,6 +128,56 @@ class MemberControllerMockTest {
                                          String password,
                                          ErrorCodeType errorCodeType) throws Exception {
             MemberJoinRequest dto = MemberJoinRequest.of(accountName, email, password);
+            String content = mapper.writeValueAsString(dto);
+            String message = errorCodeType.getMessage();
+            mockMvc.perform(post(URI)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(content)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
+                    .andExpect(jsonPath("$.message").value(message))
+                    .andDo(print())
+                    .andReturn();
+        }
+
+    }
+
+    @DisplayName("사용자 가입승인 WebMvc")
+    @Nested
+    class Approve {
+
+        private static final String URI = BASE_URI + "/approve";
+
+        @BeforeEach
+        void setUp() {
+            given(memberService.approve(any(MemberApprovalRequest.class)))
+                    .willReturn(1L);
+        }
+
+        @DisplayName("빈 계정 이름")
+        @Test
+        void givenBlankAccountName_then400() throws Exception {
+            validateRequestBody(BLANK, PASSWORD, APPROVAL_CODE, RequestBodyErrorCode.ACCOUNT_NAME_BLANK);
+        }
+
+        @DisplayName("빈 비밀번호")
+        @Test
+        void givenBlankPassword_then400() throws Exception {
+            validateRequestBody(ACCOUNT_NAME, BLANK, APPROVAL_CODE, RequestBodyErrorCode.PASSWORD_BLANK);
+        }
+
+        @DisplayName("빈 승인코드")
+        @Test
+        void givenBlankApprovalCode_then400() throws Exception {
+            validateRequestBody(ACCOUNT_NAME, PASSWORD, BLANK, RequestBodyErrorCode.APPROVAL_CODE_BLANK);
+        }
+
+        private void validateRequestBody(String accountName,
+                                         String password,
+                                         String approvalCode,
+                                         ErrorCodeType errorCodeType) throws Exception {
+            MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, password, approvalCode);
             String content = mapper.writeValueAsString(dto);
             String message = errorCodeType.getMessage();
             mockMvc.perform(post(URI)
