@@ -42,6 +42,7 @@ public class Member extends BaseEntity {
         this.password = password;
         this.approvalCode = approvalCode;
         this.isApproved = isApproved;
+        authority = Authority.ROLE_USER;
     }
 
     public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
