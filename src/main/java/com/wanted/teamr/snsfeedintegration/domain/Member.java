@@ -35,7 +35,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
         this.accountName = accountName;
         this.email = email;
