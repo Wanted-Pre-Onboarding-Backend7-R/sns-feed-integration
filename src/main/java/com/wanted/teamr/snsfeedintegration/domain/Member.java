@@ -5,6 +5,8 @@ import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +31,9 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean isApproved;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
