@@ -113,4 +113,8 @@ public class TokenProvider {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    public Key getKey() {
+        return key;
+    }
+
 }
