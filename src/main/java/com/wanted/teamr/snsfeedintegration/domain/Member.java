@@ -1,13 +1,20 @@
 package com.wanted.teamr.snsfeedintegration.domain;
 
+import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
+import com.wanted.teamr.snsfeedintegration.exception.CustomException;
+import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Member extends BaseEntity {
 
     @Column(nullable = false, unique = true)
@@ -27,5 +34,31 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
+        this.accountName = accountName;
+        this.email = email;
+        this.password = password;
+        this.approvalCode = approvalCode;
+        this.isApproved = isApproved;
+    }
+
+    public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {
+        return builder()
+                .accountName(dto.getAccountName())
+                .email(dto.getEmail())
+                .password(encodedPassword)
+                .approvalCode(approvalCode)
+                .isApproved(false)
+                .build();
+    }
+
+    public void approve() {
+        if (getIsApproved()) {
+            throw new CustomException(ErrorCode.ALREADY_APPROVED);
+        }
+        isApproved = true;
+    }
 
 }
