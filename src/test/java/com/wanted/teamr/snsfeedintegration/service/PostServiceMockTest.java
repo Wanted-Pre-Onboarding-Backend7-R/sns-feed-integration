@@ -43,17 +43,18 @@ class PostServiceMockTest {
     @Mock
     ExternalApiConfig externalApiConfig;
 
-    @DisplayName("게시물 한 건에 대한 상세 정보를 가져온다.")
+    @DisplayName("게시물 한 건에 대한 상세 정보를 가져오며 조회수를 1 늘린다.")
     @Test
     void getPost() {
         // given
+        long viewCount = 100L;
         Long postId = 123L;
         Post post = Post.builder()
                 .contentId("12345")
                 .type(SnsType.FACEBOOK)
                 .title("맛집 탐방 1")
                 .content("여기 진짜 맛집인정!")
-                .viewCount(100L)
+                .viewCount(viewCount)
                 .likeCount(30L)
                 .shareCount(10L)
                 .createdAt(LocalDateTime.of(2023, 10, 10, 10, 10, 10))
@@ -67,14 +68,13 @@ class PostServiceMockTest {
                 .post(post)
                 .hashtag("Dani")
                 .build();
-        postRepository.save(post);
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findByIdForUpdate(postId)).willReturn(Optional.of(post));
 
         // when
         PostGetResponse postGetResponse = postService.getPost(postId);
 
         // then
-        verify(postRepository).findById(postId);
+        verify(postRepository).findByIdForUpdate(postId);
         assertThat(postGetResponse).isNotNull()
                 .extracting(
                         "contentId", "type", "title", "content",
@@ -83,7 +83,7 @@ class PostServiceMockTest {
                 )
                 .containsExactly(
                         "12345", "FACEBOOK", "맛집 탐방 1", "여기 진짜 맛집인정!",
-                        List.of("맛집", "Dani"), 100L, 30L, 10L,
+                        List.of("맛집", "Dani"), viewCount + 1, 30L, 10L,
                         LocalDateTime.of(2023, 10, 10, 10, 10, 10),
                         LocalDateTime.of(2023, 10, 10, 10, 10, 20)
                 );
@@ -94,7 +94,7 @@ class PostServiceMockTest {
     void getPostNotFound() {
         // given
         Long postId = 123L;
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
+        given(postRepository.findByIdForUpdate(postId)).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> postService.getPost(postId))

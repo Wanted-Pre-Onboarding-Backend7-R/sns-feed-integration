@@ -33,17 +33,18 @@ public class PostControllerTest {
     @Autowired
     PostRepository postRepository;
 
-    @DisplayName("게시물 상세 정보 응답을 보낸다.")
+    @DisplayName("게시물 조회 시 게시물 상세 정보 응답을 보내고 조회수를 1 증가시킨다.")
     @WithMockUser
     @Test
     void getPost() throws Exception {
         // given
+        long viewCount = 100L;
         Post post = Post.builder()
                 .contentId("12345")
                 .type(SnsType.FACEBOOK)
                 .title("맛집 탐방 1")
                 .content("여기 진짜 맛집인정!")
-                .viewCount(100L)
+                .viewCount(viewCount)
                 .likeCount(30L)
                 .shareCount(10L)
                 .createdAt(LocalDateTime.of(2023, 10, 10, 10, 10, 10))
@@ -73,7 +74,7 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.hashtags").isArray())
                 .andExpect(jsonPath("$.hashtags[0]").value("맛집"))
                 .andExpect(jsonPath("$.hashtags[1]").value("Dani"))
-                .andExpect(jsonPath("$.viewCount").value(100))
+                .andExpect(jsonPath("$.viewCount").value(viewCount + 1))
                 .andExpect(jsonPath("$.likeCount").value(30))
                 .andExpect(jsonPath("$.shareCount").value(10))
                 .andExpect(jsonPath("$.createdAt").value("2023-10-10T10:10:10"))
