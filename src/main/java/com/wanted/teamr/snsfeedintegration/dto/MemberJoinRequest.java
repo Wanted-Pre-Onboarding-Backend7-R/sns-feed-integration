@@ -1,6 +1,5 @@
 package com.wanted.teamr.snsfeedintegration.dto;
 
-import com.wanted.teamr.snsfeedintegration.util.ValidationGroup;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -15,7 +14,7 @@ public class MemberJoinRequest {
 
     @NotBlank
     @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$",
-            groups = ValidationGroup.Email.class)
+            groups = Email.class)
     private String email;
 
     @NotBlank

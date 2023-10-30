@@ -1,6 +1,7 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wanted.teamr.snsfeedintegration.dto.MemberApprovalRequest;
 import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("/api/members WebMvc 테스트")
+@DisplayName("/api/members WebMvc")
 @Import(SecurityConfig.class)
 @WebMvcTest(MemberController.class)
 class MemberControllerMockTest {
@@ -42,7 +43,7 @@ class MemberControllerMockTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @DisplayName("사용자 회원가입 WebMvc")
+    @DisplayName("/join 사용자 회원가입 WebMvc")
     @Nested
     class Join {
 
@@ -54,25 +55,25 @@ class MemberControllerMockTest {
                     .willReturn(1L);
         }
 
-        @DisplayName("빈 계정 이름")
+        @DisplayName("[계정 이름] 공백")
         @Test
         void givenBlankAccountName_then400() throws Exception {
             validateRequestBody(BLANK, EMAIL, PASSWORD, RequestBodyErrorCode.ACCOUNT_NAME_BLANK);
         }
 
-        @DisplayName("빈 이메일")
+        @DisplayName("[이메일] 공백")
         @Test
         void givenBlankEmail_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, BLANK, PASSWORD, RequestBodyErrorCode.EMAIL_BLANK);
         }
 
-        @DisplayName("빈 비밀번호")
+        @DisplayName("[비밀번호] 공백")
         @Test
         void givenBlankPassword_then400() throws Exception {
             validateRequestBody(ACCOUNT_NAME, EMAIL, BLANK, RequestBodyErrorCode.PASSWORD_BLANK);
         }
 
-        @DisplayName("잘못된 이메일 형식")
+        @DisplayName("[이메일] 잘못된 형식")
         @ValueSource(strings = {"wrong_email@", "@a.com", "aa.com", "a.d@s"})
         @ParameterizedTest
         void givenInvalidEmailFormat_then400(String email) throws Exception {
@@ -127,19 +128,72 @@ class MemberControllerMockTest {
                                          String password,
                                          ErrorCodeType errorCodeType) throws Exception {
             MemberJoinRequest dto = MemberJoinRequest.of(accountName, email, password);
-            String content = mapper.writeValueAsString(dto);
-            String message = errorCodeType.getMessage();
-            mockMvc.perform(post(URI)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(content)
-                    )
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
-                    .andExpect(jsonPath("$.message").value(message))
-                    .andDo(print())
-                    .andReturn();
+            MemberControllerMockTest.this.validateRequestBody(dto, errorCodeType, URI);
         }
 
+    }
+
+    @DisplayName("/approve 사용자 가입승인 WebMvc")
+    @Nested
+    class Approve {
+
+        private static final String URI = BASE_URI + "/approve";
+
+        @BeforeEach
+        void setUp() {
+            given(memberService.approve(any(MemberApprovalRequest.class)))
+                    .willReturn(1L);
+        }
+
+        @DisplayName("[계정 이름] 공백")
+        @Test
+        void givenBlankAccountName_then400() throws Exception {
+            validateRequestBody(BLANK, PASSWORD, APPROVAL_CODE, RequestBodyErrorCode.ACCOUNT_NAME_BLANK);
+        }
+
+        @DisplayName("[비밀번호] 공백")
+        @Test
+        void givenBlankPassword_then400() throws Exception {
+            validateRequestBody(ACCOUNT_NAME, BLANK, APPROVAL_CODE, RequestBodyErrorCode.PASSWORD_BLANK);
+        }
+
+        @DisplayName("[승인코드] 공백")
+        @Test
+        void givenBlankApprovalCode_then400() throws Exception {
+            validateRequestBody(ACCOUNT_NAME, PASSWORD, BLANK, RequestBodyErrorCode.APPROVAL_CODE_BLANK);
+        }
+
+        @DisplayName("[승인코드] 유효하지 않은 형식")
+        @ParameterizedTest
+        @ValueSource(strings = {"1235A", "1235AAA", "sd12A&"})
+        void givenInvalidApprovalCodeFormat_then400(String approvalCode) throws Exception {
+            validateRequestBody(ACCOUNT_NAME, PASSWORD, approvalCode, RequestBodyErrorCode.APPROVAL_CODE_INVALID_FORMAT);
+        }
+
+        private void validateRequestBody(String accountName,
+                                         String password,
+                                         String approvalCode,
+                                         ErrorCodeType errorCodeType) throws Exception {
+            MemberApprovalRequest dto = MemberApprovalRequest.of(accountName, password, approvalCode);
+            MemberControllerMockTest.this.validateRequestBody(dto, errorCodeType, URI);
+        }
+
+    }
+
+    private void validateRequestBody(Object dto,
+                                     ErrorCodeType errorCodeType,
+                                     String uri) throws Exception {
+        String content = mapper.writeValueAsString(dto);
+        String message = errorCodeType.getMessage();
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value(errorCodeType.name()))
+                .andExpect(jsonPath("$.message").value(message))
+                .andDo(print())
+                .andReturn();
     }
 
 }
