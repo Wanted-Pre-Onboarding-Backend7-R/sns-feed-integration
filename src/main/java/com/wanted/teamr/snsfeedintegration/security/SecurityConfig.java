@@ -2,8 +2,6 @@ package com.wanted.teamr.snsfeedintegration.security;
 
 import com.wanted.teamr.snsfeedintegration.jwt.JwtAccessDeniedHandler;
 import com.wanted.teamr.snsfeedintegration.jwt.JwtAuthenticationEntryPoint;
-import com.wanted.teamr.snsfeedintegration.jwt.TokenProvider;
-import com.wanted.teamr.snsfeedintegration.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +54,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder encodePassword() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
