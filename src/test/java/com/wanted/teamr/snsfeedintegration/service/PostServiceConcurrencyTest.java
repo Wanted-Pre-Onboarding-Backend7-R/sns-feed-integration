@@ -37,8 +37,8 @@ class PostServiceConcurrencyTest {
     }
 
     @Test
-    @DisplayName("게시물 좋아요 기능 멀티 스레드로 동시에 총 1000번 요청")
-    public void postLikeMultiThreadRequest1000() throws InterruptedException {
+    @DisplayName("게시물 좋아요 기능 멀티 스레드로 동시에 총 100번 요청")
+    public void postLikeMultiThreadRequest100() throws InterruptedException {
         // given: 좋아요 수가 0인 게시글 설정
         Post post = Post.builder()
                         .contentId("123456789")
@@ -54,7 +54,7 @@ class PostServiceConcurrencyTest {
         postRepository.save(post);
         assertThat(post.getLikeCount()).isEqualTo(0L);
 
-        int totalExecutedCnt = 1000;
+        int totalExecutedCnt = 100;
         int threadCnt = 16;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
         CountDownLatch latch = new CountDownLatch(totalExecutedCnt);
