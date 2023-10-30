@@ -4,15 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wanted.teamr.snsfeedintegration.dto.MemberLogInRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.RefreshTokenRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("/api/members 통합 테스트")
 @AutoConfigureMockMvc
 @SpringBootTest
 public class MemberControllerTest {
@@ -34,6 +31,7 @@ public class MemberControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("사용자 로그인")
     @Nested
     class Login {
