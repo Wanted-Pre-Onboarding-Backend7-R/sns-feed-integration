@@ -40,6 +40,10 @@ public class PostSearchConditionConverter {
     }
 
     private SearchByType resolveSearchBy(String searchBy) {
+        if (searchBy == null) {
+            return SearchByType.TITLE_CONTENT;
+        }
+
         for (SearchByType searchByType : SearchByType.values()) {
             if (searchBy.toLowerCase().equals(searchByType.getValue())) {
                 return searchByType;

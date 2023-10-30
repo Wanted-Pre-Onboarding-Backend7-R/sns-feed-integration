@@ -45,7 +45,7 @@ public class PostGetResponse {
         return PostGetResponse.builder()
                 .postId(post.getId())
                 .contentId(post.getContentId())
-                .type(post.getType().name())
+                .type(post.getType().name().toLowerCase())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .hashtags(hashtags)
