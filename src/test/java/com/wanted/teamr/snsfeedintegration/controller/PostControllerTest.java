@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -94,6 +95,55 @@ public class PostControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
                 .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
+    }
+
+    @DisplayName("게시물 공유에 성공하면 200 OK로 응답한다.")
+    @WithMockUser
+    @Test
+    void sharePost() throws Exception {
+        // given
+        Post post = Post.builder()
+                        .contentId("1234567")
+                        .type(SnsType.INSTAGRAM)
+                        .title("강아지 졸귀")
+                        .content("우리집 강아지 보고가세요")
+                        .viewCount(225672L)
+                        .likeCount(45333L)
+                        .shareCount(10235L)
+                        .createdAt(LocalDateTime.of(2023, 8, 10, 8, 5, 22))
+                        .updatedAt(LocalDateTime.of(2023, 8, 13, 17, 35, 42))
+                        .build();
+        PostHashtag.builder()
+                   .post(post)
+                   .hashtag("강아지")
+                   .build();
+        PostHashtag.builder()
+                   .post(post)
+                   .hashtag("댕스타그램")
+                   .build();
+        postRepository.save(post);
+        Long postId = post.getId();
+
+        // when, then
+        mockMvc.perform(post("/api/posts/{postId}/share", postId))
+               .andDo(print())
+               .andExpect(status().isOk());
+    }
+
+    @DisplayName("게시물을 공유할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
+    @WithMockUser
+    @Test
+    void sharePostFailedPostNotFound() throws Exception {
+        // given
+        Long postId = 2500423423410L;
+
+        // when, then
+        mockMvc.perform(post("/api/posts/{postId}/share", postId))
+               .andDo(print())
+               .andExpect(status().isNotFound())
+               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
+               .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
     }
 
 }

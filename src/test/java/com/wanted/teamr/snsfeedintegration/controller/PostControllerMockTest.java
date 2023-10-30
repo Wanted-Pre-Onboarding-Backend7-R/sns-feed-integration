@@ -13,14 +13,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = PostController.class)
 class PostControllerMockTest {
@@ -83,6 +90,38 @@ class PostControllerMockTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
                 .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
+    }
+
+    @DisplayName("게시물 공유에 성공하면 200 OK로 응답한다.")
+    @WithMockUser
+    @Test
+    void sharePost() throws Exception {
+        // given
+        Long postId = 12300L;
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/posts/{postId}/share", postId).with(csrf()))
+                                      .andDo(print());
+        // then
+        verify(postService).sharePost(postId);
+        result.andExpect(status().isOk());
+    }
+
+    @DisplayName("게시물을 공유할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
+    @WithMockUser
+    @Test
+    void sharePostFailedPostNotFound() throws Exception {
+        // given
+        Long postId = 1232252L;
+        doThrow(new CustomException(ErrorCode.POST_NOT_FOUND)).when(postService).sharePost(postId);
+
+        // when, then
+        mockMvc.perform(post("/api/posts/{postId}/share", postId).with(csrf()))
+               .andDo(print())
+               .andExpect(status().isNotFound())
+               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
+               .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
     }
 
 }
