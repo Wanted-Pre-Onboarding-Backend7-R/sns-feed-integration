@@ -32,9 +32,9 @@ import java.util.Collection;
  */
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+
     public static final String BEARER_PREFIX = "Bearer ";
     public static String AUTHORITIES_KEY = "auth";
-    private final String SECRET_KEY;
     private final TokenProvider tokenProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -46,8 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
+        Key key = tokenProvider.getKey();
 
         /* Request Header 에서 토큰을 꺼냄 */
         String accessToken = resolveToken(request);
