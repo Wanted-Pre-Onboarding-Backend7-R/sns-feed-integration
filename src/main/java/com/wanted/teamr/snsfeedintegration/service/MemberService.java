@@ -1,10 +1,7 @@
 package com.wanted.teamr.snsfeedintegration.service;
 
 import com.wanted.teamr.snsfeedintegration.domain.Member;
-import com.wanted.teamr.snsfeedintegration.dto.MemberApprovalRequest;
-import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
-import com.wanted.teamr.snsfeedintegration.dto.MemberLogInRequest;
-import com.wanted.teamr.snsfeedintegration.dto.TokenDto;
+import com.wanted.teamr.snsfeedintegration.dto.*;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.jwt.TokenProvider;
@@ -26,22 +23,37 @@ public class MemberService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public void login(MemberLogInRequest memberLogInRequest, HttpServletResponse response) {
-        Member member = isPresentMember(memberLogInRequest.getAccountName());
-        validatePassword(memberLogInRequest, member);
+    public Long join(MemberJoinRequest dto) {
+        Member member = createMember(dto);
+        try {
+            member = memberRepository.save(member);
+            return member.getId();
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(ErrorCode.DUPLICATE_ACCOUNT_NAME, e);
+        }
+    }
+
+    private Member createMember(MemberJoinRequest dto) {
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        String approvalCode = ApprovalCodeGenerator.generate();
+        return Member.of(dto, encodedPassword, approvalCode);
+    }
+
+    @Transactional
+    public Long approve(MemberApprovalRequest dto) {
+        Member member = getMember(dto);
+        validatePassword(dto, member);
+        validateApprovalCode(dto, member);
+        member.approve();
+        return member.getId();
+    }
+
+    @Transactional
+    public void login(MemberLogInRequest dto, HttpServletResponse response) {
+        Member member = getMember(dto);
+        validatePassword(dto, member);
         isApproved(member);
         tokenToHeaders(member, response);
-    }
-
-    public Member isPresentMember(String accountName) {
-        return memberRepository.findByAccountName(accountName)
-                .orElseThrow(() -> new CustomException(ErrorCode.WRONG_ACCOUNT_INFO));
-    }
-
-    public void validatePassword(MemberLogInRequest memberLogInRequest, Member member) {
-        if(!passwordEncoder.matches(memberLogInRequest.getPassword(), member.getPassword())) {
-            throw new CustomException(ErrorCode.WRONG_ACCOUNT_INFO);
-        }
     }
 
     public void isApproved(Member member) {
@@ -57,35 +69,13 @@ public class MemberService {
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
     }
 
-    @Transactional
-    public Long join(MemberJoinRequest dto) {
-        String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        String approvalCode = ApprovalCodeGenerator.generate();
-        Member member = Member.of(dto, encodedPassword, approvalCode);
-        try {
-            member = memberRepository.save(member);
-            return member.getId();
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomException(ErrorCode.DUPLICATE_ACCOUNT_NAME, e);
-        }
-    }
-
-    @Transactional
-    public Long approve(MemberApprovalRequest dto) {
-        Member member = getMember(dto);
-        validatePassword(dto, member);
-        validateApprovalCode(dto, member);
-        member.approve();
-        return member.getId();
-    }
-
-    private Member getMember(MemberApprovalRequest dto) {
-        return memberRepository.findByAccountName(dto.getAccountName())
+    private Member getMember(AccountInfo acc) {
+        return memberRepository.findByAccountName(acc.getAccountName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ACCOUNT_INFO_WRONG));
     }
 
-    private void validatePassword(MemberApprovalRequest dto, Member member) {
-        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+    private void validatePassword(AccountInfo accountInfo, Member member) {
+        if (!passwordEncoder.matches(accountInfo.getPassword(), member.getPassword())) {
             throw new CustomException(ErrorCode.ACCOUNT_INFO_WRONG);
         }
     }
