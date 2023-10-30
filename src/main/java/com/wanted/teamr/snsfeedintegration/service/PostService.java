@@ -1,5 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.service;
 
+import com.wanted.teamr.snsfeedintegration.domain.Member;
 import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.dto.PostGetResponse;
 import com.wanted.teamr.snsfeedintegration.exception.CustomException;
@@ -23,22 +24,21 @@ public class PostService {
     }
 
     @Transactional
-    public void likePost(Long postId) {
+    public void likePost(Long postId, Member member) {
         Post post = postRepository.findByIdForUpdate(postId)
                                   .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        snsService.likePost(post.getContentId(), post.getType());
+        snsService.likePost(post.getContentId(), post.getType(), member);
 
         post.increaseLikeCount();
-        postRepository.save(post);
     }
 
     @Transactional
-    public void sharePost(Long postId) {
+    public void sharePost(Long postId, Member member) {
         Post post = postRepository.findByIdForUpdate(postId)
                                   .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        snsService.sharePost(post.getContentId(), post.getType());
+        snsService.sharePost(post.getContentId(), post.getType(), member);
 
         post.increaseShareCount();
     }

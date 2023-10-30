@@ -5,6 +5,7 @@ import com.wanted.teamr.snsfeedintegration.domain.PostHashtag;
 import com.wanted.teamr.snsfeedintegration.domain.SnsType;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.repository.PostRepository;
+import com.wanted.teamr.snsfeedintegration.security.WithAuthUser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,9 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -97,8 +100,57 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
     }
 
+    @DisplayName("게시물 좋아요에 성공하면 200 OK로 응답한다.")
+    @WithAuthUser
+    @Test
+    void likePost() throws Exception {
+        // given
+        Post post = Post.builder()
+                        .contentId("5668")
+                        .type(SnsType.INSTAGRAM)
+                        .title("우리집 고양이")
+                        .content("우리집 고양이 보고가세요")
+                        .viewCount(21600L)
+                        .likeCount(7775L)
+                        .shareCount(555L)
+                        .createdAt(LocalDateTime.of(2021, 8, 10, 8, 5, 22))
+                        .updatedAt(LocalDateTime.of(2021, 8, 17, 17, 35, 42))
+                        .build();
+        PostHashtag.builder()
+                   .post(post)
+                   .hashtag("고양이")
+                   .build();
+        PostHashtag.builder()
+                   .post(post)
+                   .hashtag("냥스타그램")
+                   .build();
+        postRepository.save(post);
+        Long postId = post.getId();
+
+        // when, then
+        mockMvc.perform(post("/api/posts/{postId}/like", postId))
+               .andDo(print())
+               .andExpect(status().isOk());
+    }
+
+    @DisplayName("게시물 좋아요 요청할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
+    @WithAuthUser
+    @Test
+    void likePostFailedPostNotFound() throws Exception {
+        // given
+        Long postId = 808080L;
+
+        // when, then
+        mockMvc.perform(post("/api/posts/{postId}/like", postId))
+               .andDo(print())
+               .andExpect(status().isNotFound())
+               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
+               .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
+    }
+
     @DisplayName("게시물 공유에 성공하면 200 OK로 응답한다.")
-    @WithMockUser
+    @WithAuthUser
     @Test
     void sharePost() throws Exception {
         // given
@@ -131,7 +183,7 @@ public class PostControllerTest {
     }
 
     @DisplayName("게시물을 공유할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
-    @WithMockUser
+    @WithAuthUser
     @Test
     void sharePostFailedPostNotFound() throws Exception {
         // given
