@@ -113,6 +113,55 @@ class PostServiceMockTest {
                 .isEqualTo(ErrorCode.POST_NOT_FOUND);
     }
 
+    @DisplayName("게시물 좋아요 성공")
+    @Test
+    void likePost() {
+        // given: 게시물이 존재하도록 설정
+        Long postId = 3500L;
+        Long likeCount = 77776L;
+        Post post = Post.builder()
+                        .contentId("5668")
+                        .type(SnsType.INSTAGRAM)
+                        .title("우리집 고양이")
+                        .content("우리집 고양이 보고가세요")
+                        .viewCount(225600L)
+                        .likeCount(likeCount)
+                        .shareCount(10000L)
+                        .createdAt(LocalDateTime.of(2021, 8, 10, 8, 5, 22))
+                        .updatedAt(LocalDateTime.of(2021, 8, 17, 17, 35, 42))
+                        .build();
+        given(postRepository.findByIdForUpdate(postId)).willReturn(Optional.of(post));
+        given(snsService.likePost(post.getContentId(), post.getType(), member)).willReturn(true);
+
+        // when
+        postService.likePost(postId, member);
+
+        // then: 좋아요 수가 +1 됐는지 확인
+        assertAll(
+                () -> verify(postRepository).findByIdForUpdate(postId),
+                () -> verify(snsService).likePost(post.getContentId(), post.getType(), member),
+                () -> assertThat(post.getLikeCount()).isEqualTo(likeCount + 1)
+        );
+    }
+
+    @DisplayName("게시물 좋아요 요청할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
+    @Test
+    void likePostFailedPostNotFound() {
+        // given: postId에 해당하는 게시물이 존재하지 않도록 설정
+        Long postId = 7700L;
+        given(postRepository.findByIdForUpdate(postId)).willReturn(Optional.empty());
+
+        // when
+        CustomException ex = assertThrows(CustomException.class, () -> postService.likePost(postId, member));
+
+        // then: POST_NOT_FOUND 예외 발생 확인
+        assertAll(
+                () -> assertThat(ex.getErrorCodeType()).isEqualTo(ErrorCode.POST_NOT_FOUND),
+                () -> verify(postRepository).findByIdForUpdate(postId),
+                () -> verify(snsService, never()).likePost(any(String.class), any(SnsType.class), any(Member.class))
+        );
+    }
+
     @DisplayName("게시물 공유 성공")
     @Test
     void sharePost() {

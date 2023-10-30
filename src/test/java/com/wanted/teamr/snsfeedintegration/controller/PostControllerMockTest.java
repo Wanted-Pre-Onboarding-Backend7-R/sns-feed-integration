@@ -103,6 +103,41 @@ class PostControllerMockTest {
                .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
     }
 
+    @DisplayName("게시물 좋아요에 성공하면 200 OK로 응답한다.")
+    @WithAuthUser
+    @Test
+    void likePost() throws Exception {
+        // given
+        Long postId = 777L;
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/posts/{postId}/like", postId).with(csrf()))
+                                      .andDo(print());
+        // then
+        verify(postService).likePost(postId, member);
+        result.andExpect(status().isOk());
+    }
+
+    @DisplayName("게시물 좋아요 요청할 때 게시물 id에 해당하는 게시물을 찾을 수 없어 예외가 발생한다.")
+    @WithAuthUser
+    @Test
+    void likePostFailedPostNotFound() throws Exception {
+        // given
+        Long postId = 5000L;
+        doThrow(new CustomException(ErrorCode.POST_NOT_FOUND)).when(postService)
+                                                              .likePost(postId, member);
+
+        // when
+        ResultActions result = mockMvc.perform(post("/api/posts/{postId}/like", postId).with(csrf()))
+                                      .andDo(print());
+
+        // then
+        result.andExpect(status().isNotFound())
+              .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+              .andExpect(jsonPath("$.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
+              .andExpect(jsonPath("$.message").value(ErrorCode.POST_NOT_FOUND.getMessage()));
+    }
+
     @DisplayName("게시물 공유에 성공하면 200 OK로 응답한다.")
     @WithAuthUser
     @Test
