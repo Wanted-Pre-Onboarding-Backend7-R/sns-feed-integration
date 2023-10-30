@@ -62,11 +62,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return null;
         }
 
-        if (searchBy == SearchByType.title) {
+        if (searchBy == SearchByType.TITLE) {
             return post.title.contains(search);
         }
 
-        if (searchBy == SearchByType.content) {
+        if (searchBy == SearchByType.CONTENT) {
             return post.content.contains(search);
         }
 

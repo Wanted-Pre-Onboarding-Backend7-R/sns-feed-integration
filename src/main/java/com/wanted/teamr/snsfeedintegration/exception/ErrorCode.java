@@ -14,6 +14,8 @@ public enum ErrorCode implements ErrorCodeType {
     PASSWORD_PERSONAL_INFO("다른 개인정보와 유사한 비밀번호는 사용할 수 없습니다.", HttpStatus.BAD_REQUEST),
 //    PASSWORD_MOST_USED("통상적으로 자주 사용되는 비밀번호는 사용할 수 없습니다.", HttpStatus.BAD_REQUEST),
     DUPLICATE_ACCOUNT_NAME("이미 같은 이름의 계정이 존재합니다", HttpStatus.BAD_REQUEST),
+    NOT_FOUND_SNS_TYPE("대응하는 소셜미디어 타입이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
+    NOT_FOUND_SEARCH_BY_TYPE("대응하는 검색 기준이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
 
     POST_NOT_FOUND("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 

@@ -21,4 +21,13 @@ public class PostSearchCondition {
         this.search = search;
     }
 
+    public static PostSearchCondition of(String hashtag, SnsType type, SearchByType searchBy, String search) {
+        return PostSearchCondition.builder()
+                .hashtag(hashtag)
+                .type(type)
+                .searchBy(searchBy)
+                .search(search)
+                .build();
+    }
+
 }

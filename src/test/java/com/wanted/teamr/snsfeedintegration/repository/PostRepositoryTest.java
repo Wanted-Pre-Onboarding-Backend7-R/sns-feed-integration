@@ -66,7 +66,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("초콜릿")
                 .type(SnsType.FACEBOOK)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
         PageRequest pageRequest = PageRequest.of(0, 10,
@@ -114,7 +114,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("카메라")
                 .type(SnsType.FACEBOOK)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
         PageRequest pageRequest = PageRequest.of(0, 10,
@@ -160,7 +160,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("초콜릿")
                 .type(SnsType.FACEBOOK)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
         PageRequest pageRequest = PageRequest.of(0, 10,
@@ -207,7 +207,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("초콜릿")
                 .type(null)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
         PageRequest pageRequest = PageRequest.of(0, 10,
@@ -255,7 +255,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("초콜릿")
                 .type(SnsType.FACEBOOK)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
         PageRequest pageRequest = PageRequest.of(0, 10,
@@ -335,9 +335,9 @@ class PostRepositoryTest {
     static Stream<Arguments> givenSearchByArgumentsProvider() {
         return Stream.of(
                 // SearchByType searchByType, String search, int expectedSize, List<String> expectedContentIds
-                Arguments.of(SearchByType.title, "해변", 2, List.of("12345", "asdfg")),
-                Arguments.of(SearchByType.content, "선물", 1, List.of("qwerty")),
-                Arguments.of(SearchByType.titleContent, "노트북", 2, List.of("12345", "qwerty"))
+                Arguments.of(SearchByType.TITLE, "해변", 2, List.of("12345", "asdfg")),
+                Arguments.of(SearchByType.CONTENT, "선물", 1, List.of("qwerty")),
+                Arguments.of(SearchByType.TITLE_CONTENT, "노트북", 2, List.of("12345", "qwerty"))
         );
     }
 
@@ -383,7 +383,7 @@ class PostRepositoryTest {
         PostSearchCondition searchCondition = PostSearchCondition.builder()
                 .hashtag("초콜릿")
                 .type(SnsType.FACEBOOK)
-                .searchBy(SearchByType.content)
+                .searchBy(SearchByType.CONTENT)
                 .search("산책로")
                 .build();
 
