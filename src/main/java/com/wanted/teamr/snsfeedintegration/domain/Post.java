@@ -70,4 +70,8 @@ public class Post extends BaseEntity {
         likeCount += 1;
     }
 
+    public void increaseShareCount() {
+        shareCount += 1;
+    }
+
 }

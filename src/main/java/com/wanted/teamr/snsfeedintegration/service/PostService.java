@@ -29,6 +29,12 @@ public class PostService {
         return PostGetResponse.of(post);
     }
 
+    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable) {
+        PostSearchCondition condition = converter.convert(request);
+        List<Post> posts = postRepository.search(condition, pageable);
+        return posts.stream().map(PostGetResponse::of).toList();
+    }
+
     @Transactional
     public void likePost(Long postId) {
         Post post = postRepository.findByIdForUpdate(postId)
@@ -40,10 +46,14 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable) {
-        PostSearchCondition condition = converter.convert(request);
-        List<Post> posts = postRepository.search(condition, pageable);
-        return posts.stream().map(PostGetResponse::of).toList();
+    @Transactional
+    public void sharePost(Long postId) {
+        Post post = postRepository.findByIdForUpdate(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        snsService.sharePost(post.getContentId(), post.getType());
+
+        post.increaseShareCount();
     }
 
 }

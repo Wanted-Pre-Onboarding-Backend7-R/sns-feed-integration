@@ -35,4 +35,10 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/api/posts/{postId}/share")
+    public ResponseEntity<?> sharePost(@PathVariable("postId") Long postId) {
+        postService.sharePost(postId);
+        return ResponseEntity.ok().build();
+    }
+
 }
