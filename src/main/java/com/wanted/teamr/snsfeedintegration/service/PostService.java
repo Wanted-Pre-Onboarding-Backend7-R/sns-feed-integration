@@ -32,4 +32,14 @@ public class PostService {
         post.increaseLikeCount();
         postRepository.save(post);
     }
+
+    @Transactional
+    public void sharePost(Long postId) {
+        Post post = postRepository.findByIdForUpdate(postId)
+                                  .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        snsService.sharePost(post.getContentId(), post.getType());
+
+        post.increaseShareCount();
+    }
 }

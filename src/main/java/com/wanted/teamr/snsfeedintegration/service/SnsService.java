@@ -45,4 +45,34 @@ public class SnsService {
 
         return true;
     }
+
+    /**
+     * 본 서비스가 아닌 실제 외부 SNS의 공유 API를 호출여 공유 기능을 처리합니다.
+     *
+     * @param contentId 게시물이 해당하는 SNS에서 관리되는 고유 인식 값
+     * @param snsType   SNS 종류
+     * @return 외부 SNS 게시물 공유 기능 동작 성공 여부
+     */
+    public boolean sharePost(String contentId, SnsType snsType) {
+        String domain = externalApiConfig.getSnsApiDomains()
+                                         .get(snsType.name());
+        String path = String.format(externalApiConfig.getPostPath()
+                                                     .get("share"), contentId);
+        String url = String.format("%s%s", domain, path);
+
+
+        /**
+         * 외부 API 통신에 대한 로직을 보여주기 위한 코드로
+         * webClientService구현체 webClientServiceImpl에서 send 함수가 항상 null을 반환합니다.
+         * 그래서 아래 코드의 주석 처리를 지우면 외부 API 통신에 대해 항상 실패합니다.
+         */
+        // TODO: 외부 API 호출 구현
+        /*HttpResponse response = webClientService.send(url, HttpMethod.POST);
+        int httpStatus = response.statusCode();
+        if (httpStatus != HttpStatus.OK.value()) {
+            // throw exception
+        }*/
+
+        return true;
+    }
 }

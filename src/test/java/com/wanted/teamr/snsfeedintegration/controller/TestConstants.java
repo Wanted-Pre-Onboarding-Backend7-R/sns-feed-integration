@@ -7,6 +7,7 @@ public interface TestConstants {
     String EMAIL_DOMAIN = "gmail.com";
     String EMAIL = EMAIL_HEAD + "@" + EMAIL_DOMAIN;
     String PASSWORD = "qlalfqjsgh486^^";
+    String APPROVAL_CODE = "a1dYsN";
     String BLANK = "  ";
 
 }
