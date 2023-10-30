@@ -15,7 +15,6 @@ import java.io.IOException;
 /**
  * 필요한 권한이 존재하지 않은 경우 403 FORBIDDEN
  */
-@Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
