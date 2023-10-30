@@ -134,12 +134,13 @@ class MemberServiceMockTest {
             given(member.getApprovalCode())
                     .willReturn(APPROVAL_CODE);
 
-            doThrow(CustomException.class)
+            doThrow(new CustomException(ErrorCode.ALREADY_APPROVED))
                     .when(member).approve();
 
             // when, then
             Assertions.assertThatThrownBy(() -> sut.approve(dto))
-                    .isInstanceOf(CustomException.class);
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ErrorCode.ALREADY_APPROVED.getMessage());
         }
 
         @DisplayName("성공")

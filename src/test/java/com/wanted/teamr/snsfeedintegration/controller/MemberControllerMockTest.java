@@ -6,6 +6,7 @@ import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
 import com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode;
+import com.wanted.teamr.snsfeedintegration.security.JwtSecurityConfig;
 import com.wanted.teamr.snsfeedintegration.security.SecurityConfig;
 import com.wanted.teamr.snsfeedintegration.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("/api/members WebMvc")
 @Import(SecurityConfig.class)
+@MockBean(JwtSecurityConfig.class)
 @WebMvcTest(MemberController.class)
 class MemberControllerMockTest {
 

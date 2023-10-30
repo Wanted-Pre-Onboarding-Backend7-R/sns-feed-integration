@@ -14,7 +14,6 @@ import java.io.IOException;
 /**
  * 유효한 자격증명을 제공하지 않고 접근할때 401 UNAUTHORIZED
  */
-@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
