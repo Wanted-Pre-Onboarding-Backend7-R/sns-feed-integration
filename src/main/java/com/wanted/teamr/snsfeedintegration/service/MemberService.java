@@ -13,7 +13,7 @@ import com.wanted.teamr.snsfeedintegration.util.ApprovalCodeGenerator;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
     @Transactional
@@ -39,7 +39,7 @@ public class MemberService {
     }
 
     public void validatePassword(MemberLogInRequest memberLogInRequest, Member member) {
-        if(!bCryptPasswordEncoder.matches(memberLogInRequest.getPassword(), member.getPassword())) {
+        if(!passwordEncoder.matches(memberLogInRequest.getPassword(), member.getPassword())) {
             throw new CustomException(ErrorCode.WRONG_ACCOUNT_INFO);
         }
     }
@@ -59,7 +59,7 @@ public class MemberService {
 
     @Transactional
     public Long join(MemberJoinRequest dto) {
-        String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
         String approvalCode = ApprovalCodeGenerator.generate();
         Member member = Member.of(dto, encodedPassword, approvalCode);
         try {
@@ -85,7 +85,7 @@ public class MemberService {
     }
 
     private void validatePassword(MemberApprovalRequest dto, Member member) {
-        if (!bCryptPasswordEncoder.matches(dto.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             throw new CustomException(ErrorCode.ACCOUNT_INFO_WRONG);
         }
     }
