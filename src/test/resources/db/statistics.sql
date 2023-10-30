@@ -3,6 +3,9 @@ TRUNCATE TABLE post_hashtag;
 TRUNCATE TABLE post;
 set FOREIGN_KEY_CHECKS = 1;
 
+INSERT INTO member(account_name, email, password, approval_code, is_approved, authority)
+values ('member1', 'test@test.com', '1234', 'test', 1, 'ROLE_USER');
+
 INSERT INTO post(content_id, type, title, content, view_count, like_count, share_count, created_at)
 VALUES ('content1', 'FACEBOOK', 'Title 1', 'This is content 1', 100, 10, 5, '2023-10-01 12:01:01'),
        ('content2', 'TWITTER', 'Title 2', 'This is content 2', 150, 15, 7, '2023-10-01 13:02:02'),

@@ -14,11 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @Sql("/db/statistics.sql")
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest
 class StatisticsControllerTest {
@@ -27,7 +29,7 @@ class StatisticsControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("특정 해시태그로 통계를 조회할 수 있다.")
     void getStatistics_hashtag() throws Exception {
         //given, when, then
@@ -48,7 +50,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("일자별 count 통계를 조회할 수 있다.")
     void getStatistics_daily_count() throws Exception {
         //given, when, then
@@ -68,7 +70,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("일자별 viewCount 통계를 조회할 수 있다.")
     void getStatistics_daily_viewCount() throws Exception {
         //given, when, then
@@ -88,7 +90,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("일자별 likeCount 통계를 조회할 수 있다.")
     void getStatistics_daily_likeCount() throws Exception {
         //given, when, then
@@ -108,7 +110,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("일자별 shareCount 통계를 조회할 수 있다.")
     void getStatistics_daily_shareCount() throws Exception {
         //given, when, then
@@ -128,7 +130,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("시간별 count 통계를 조회할 수 있다.")
     void getStatistics_hourly_count() throws Exception {
         //given, when, then
@@ -150,7 +152,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("통계값 없이 통계를 조회할 수 있다.")
     void getStatistics_noValue() throws Exception {
         //given, when, then
@@ -170,7 +172,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("잘못된 해시태그로 통계를 조회할 수 없다.")
     void getStatistics_invalidHashtag() throws Exception {
         //given, when, then
@@ -187,7 +189,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("start 미입력 시 조회 기간을 초과하면 시간별 count 통계를 조회할 수 없다.")
     void getStatistics_invalidPeriod_start() throws Exception {
         //given, when, then
@@ -202,7 +204,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("end 미입력 시 조회 기간을 초과하면 시간별 count 통계를 조회할 수 없다.")
     void getStatistics_invalidPeriod_end() throws Exception {
         //given, when, then
@@ -217,7 +219,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("조회 기간을 초과하면 일자별 count 통계를 조회할 수 없다.")
     void getStatistics_invalidPeriod_daily() throws Exception {
         //given, when, then
@@ -233,7 +235,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("조회 기간을 초과하면 시간별 count 통계를 조회할 수 없다.")
     void getStatistics_invalidPeriod_hourly() throws Exception {
         //given, when, then
@@ -249,7 +251,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("유효하지 않은 통계유형으로 통계를 조회할 수 없다.")
     void getStatistics_invalidType() throws Exception {
         //given, when, then
@@ -265,7 +267,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("유효하지 않은 통계값으로 통계를 조회할 수 없다.")
     void getStatistics_invalidValue() throws Exception {
         //given, when, then
@@ -282,7 +284,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("유효하지 않은 통계 시작일시로 통계를 조회할 수 없다.")
     void getStatistics_invalidStart() throws Exception {
         //given, when, then
@@ -299,7 +301,7 @@ class StatisticsControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithUserDetails(value = "member1")
     @DisplayName("유효하지 않은 통계 종료일시로 통계를 조회할 수 없다.")
     void getStatistics_invalidEnd() throws Exception {
         //given, when, then
