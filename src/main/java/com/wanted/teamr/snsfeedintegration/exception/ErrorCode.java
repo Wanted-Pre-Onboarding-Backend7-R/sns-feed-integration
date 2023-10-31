@@ -27,6 +27,9 @@ public enum ErrorCode implements ErrorCodeType {
     REQUIRE_AUTHORITY("필요한 권한이 없습니다.", HttpStatus.FORBIDDEN),
     REQUIRE_APPROVAL("가입승인이 필요합니다.", HttpStatus.BAD_REQUEST),
 
+    NOT_FOUND_SNS_TYPE("대응하는 소셜미디어 타입이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
+    NOT_FOUND_SEARCH_BY_TYPE("대응하는 검색 기준이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
+
     POST_NOT_FOUND("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
     NOT_FOUND_ERROR_CODE("대응하는 에러코드가 존재하지 않습니다.", HttpStatus.INTERNAL_SERVER_ERROR),

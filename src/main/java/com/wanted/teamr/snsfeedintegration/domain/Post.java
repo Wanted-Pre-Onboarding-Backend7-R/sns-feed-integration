@@ -24,7 +24,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String contentId;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<PostHashtag> postHashtags = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

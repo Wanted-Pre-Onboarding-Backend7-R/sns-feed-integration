@@ -92,7 +92,7 @@ class PostServiceMockTest {
                         "createdAt", "updatedAt"
                 )
                 .containsExactly(
-                        "12345", "FACEBOOK", "맛집 탐방 1", "여기 진짜 맛집인정!",
+                        "12345", "facebook", "맛집 탐방 1", "여기 진짜 맛집인정!",
                         List.of("맛집", "Dani"), 100L, 30L, 10L,
                         LocalDateTime.of(2023, 10, 10, 10, 10, 10),
                         LocalDateTime.of(2023, 10, 10, 10, 10, 20)
