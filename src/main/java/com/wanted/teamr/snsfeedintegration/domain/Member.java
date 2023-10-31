@@ -9,11 +9,13 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "accountName", callSuper = false)
 @Entity
 public class Member extends BaseEntity {
 
@@ -35,13 +37,14 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     private Member(String accountName, String email, String password, String approvalCode, Boolean isApproved) {
         this.accountName = accountName;
         this.email = email;
         this.password = password;
         this.approvalCode = approvalCode;
         this.isApproved = isApproved;
+        authority = Authority.ROLE_USER;
     }
 
     public static Member of(MemberJoinRequest dto, String encodedPassword, String approvalCode) {

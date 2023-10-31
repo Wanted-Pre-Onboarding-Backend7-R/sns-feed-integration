@@ -10,7 +10,7 @@ import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.domain.SearchByType;
 import com.wanted.teamr.snsfeedintegration.domain.SnsType;
 import com.wanted.teamr.snsfeedintegration.dto.PostSearchCondition;
-import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -19,13 +19,10 @@ import java.util.List;
 import static com.wanted.teamr.snsfeedintegration.domain.QPost.post;
 import static com.wanted.teamr.snsfeedintegration.domain.QPostHashtag.postHashtag;
 
+@RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
-    public PostRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<Post> search(PostSearchCondition condition, Pageable pageable) {

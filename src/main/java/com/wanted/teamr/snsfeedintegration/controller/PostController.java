@@ -1,6 +1,8 @@
 package com.wanted.teamr.snsfeedintegration.controller;
 
+import com.wanted.teamr.snsfeedintegration.domain.Member;
 import com.wanted.teamr.snsfeedintegration.dto.PostGetResponse;
+import com.wanted.teamr.snsfeedintegration.security.CurrentMember;
 import com.wanted.teamr.snsfeedintegration.dto.PostSearchRequest;
 import com.wanted.teamr.snsfeedintegration.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +32,14 @@ public class PostController {
     }
 
     @PostMapping("/api/posts/{postId}/like")
-    public ResponseEntity<?> likePost(@PathVariable("postId") Long postId) {
-        postService.likePost(postId);
+    public ResponseEntity<?> likePost(@PathVariable("postId") Long postId, @CurrentMember Member member) {
+        postService.likePost(postId, member);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/api/posts/{postId}/share")
-    public ResponseEntity<?> sharePost(@PathVariable("postId") Long postId) {
-        postService.sharePost(postId);
+    public ResponseEntity<?> sharePost(@PathVariable("postId") Long postId, @CurrentMember Member member) {
+        postService.sharePost(postId, member);
         return ResponseEntity.ok().build();
     }
 

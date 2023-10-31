@@ -1,5 +1,6 @@
 package com.wanted.teamr.snsfeedintegration.repository;
 
+import com.wanted.teamr.snsfeedintegration.config.QuerydslConfig;
 import com.wanted.teamr.snsfeedintegration.domain.Post;
 import com.wanted.teamr.snsfeedintegration.domain.PostHashtag;
 import com.wanted.teamr.snsfeedintegration.domain.SearchByType;
@@ -14,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
+@Import(QuerydslConfig.class)
 @DataJpaTest
 class PostRepositoryTest {
 

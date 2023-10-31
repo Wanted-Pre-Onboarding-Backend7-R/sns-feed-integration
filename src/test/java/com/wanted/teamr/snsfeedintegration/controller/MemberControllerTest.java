@@ -154,7 +154,6 @@ class MemberControllerTest {
                     .andExpect(status().isCreated())
                     .andDo(print())
                     .andReturn();
-
         }
 
         @Order(2)
@@ -163,11 +162,11 @@ class MemberControllerTest {
         void loginfailedbyNotFound() throws Exception {
             MemberLogInRequest dto = MemberLogInRequest.of("name", PASSWORD);
             String content = mapper.writeValueAsString(dto);
-            ErrorCode errorCode = ErrorCode.WRONG_ACCOUNT_INFO;
+            ErrorCode errorCode = ErrorCode.ACCOUNT_INFO_WRONG;
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
-                    .andExpect(status().isNotFound())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errorCode").value(errorCode.name()))
                     .andExpect(jsonPath("$.message").value(errorCode.getMessage()))
                     .andDo(print())
@@ -180,11 +179,11 @@ class MemberControllerTest {
         void loginfailedbyWrongPassword() throws Exception {
             MemberLogInRequest dto = MemberLogInRequest.of(ACCOUNT_NAME, "11111111");
             String content = mapper.writeValueAsString(dto);
-            ErrorCode errorCode = ErrorCode.WRONG_ACCOUNT_INFO;
+            ErrorCode errorCode = ErrorCode.ACCOUNT_INFO_WRONG;
             mockMvc.perform(post(URI)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(content))
-                    .andExpect(status().isNotFound())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errorCode").value(errorCode.name()))
                     .andExpect(jsonPath("$.message").value(errorCode.getMessage()))
                     .andDo(print())
