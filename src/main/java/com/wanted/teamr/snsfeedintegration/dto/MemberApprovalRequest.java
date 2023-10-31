@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class MemberApprovalRequest {
+public class MemberApprovalRequest implements AccountInfo {
 
     @NotBlank
     private String accountName;

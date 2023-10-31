@@ -25,7 +25,6 @@ public enum ErrorCode implements ErrorCodeType {
     ILLEGAL_TOKEN("JWT 토큰이 잘못되었습니다.", HttpStatus.BAD_REQUEST),
     NOT_SAME_AUTHORITY("권한이 일치하지 않습니다", HttpStatus.BAD_REQUEST),
     REQUIRE_AUTHORITY("필요한 권한이 없습니다.", HttpStatus.FORBIDDEN),
-    WRONG_ACCOUNT_INFO("아이디가 없거나 비밀번호가 틀렸습니다.", HttpStatus.NOT_FOUND),
     REQUIRE_APPROVAL("가입승인이 필요합니다.", HttpStatus.BAD_REQUEST),
 
     POST_NOT_FOUND("게시물이 존재하지 않습니다.", HttpStatus.NOT_FOUND),

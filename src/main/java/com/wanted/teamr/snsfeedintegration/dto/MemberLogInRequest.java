@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-public class MemberLogInRequest {
+public class MemberLogInRequest implements AccountInfo {
 
     @NotBlank
     private String accountName;
