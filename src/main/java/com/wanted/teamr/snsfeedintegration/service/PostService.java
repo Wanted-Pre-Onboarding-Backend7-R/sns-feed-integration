@@ -24,9 +24,11 @@ public class PostService {
     private final SnsService snsService;
     private final PostSearchConditionConverter converter;
 
+    @Transactional
     public PostGetResponse getPost(Long postId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdForUpdate(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        post.increaseViewCount();
         return PostGetResponse.of(post);
     }
 
