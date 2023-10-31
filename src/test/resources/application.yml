@@ -10,9 +10,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  h2:
-    console:
-      enabled: true
+    show-sql: true
   config:
     import:
       - external-api-config.yml
+      - pageable-config.yml
+  h2:
+    console:
+      enabled: true
