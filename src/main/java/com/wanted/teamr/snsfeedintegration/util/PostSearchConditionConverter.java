@@ -13,15 +13,17 @@ import static org.springframework.util.StringUtils.hasText;
 @Component
 public class PostSearchConditionConverter {
 
-    public PostSearchCondition convert(PostSearchRequest request) {
-        String hashtag = resolveHashtag(request.getHashtag());
+    public PostSearchCondition convert(PostSearchRequest request, String defaultHashtag) {
+        String hashtag = resolveHashtag(request.getHashtag(), defaultHashtag);
         SnsType snsType = resolveSnsType(request.getType());
         SearchByType searchByType = resolveSearchBy(request.getSearchBy());
         return PostSearchCondition.of(hashtag, snsType, searchByType, request.getSearch());
     }
 
-    private String resolveHashtag(String hashtag) {
-        // TODO: 만약 이 값이 null 이면 본인계정 hashtag 값을 사용한다.
+    private String resolveHashtag(String hashtag, String defaultHashtag) {
+        if (hashtag == null) {
+            return defaultHashtag;
+        }
         return hashtag;
     }
 
