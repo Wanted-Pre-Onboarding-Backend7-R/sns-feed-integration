@@ -32,8 +32,10 @@ public class PostService {
         return PostGetResponse.of(post);
     }
 
-    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable) {
-        PostSearchCondition condition = converter.convert(request);
+    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable,
+                                             Member member) {
+        String accountName = member.getAccountName();
+        PostSearchCondition condition = converter.convert(request, accountName);
         List<Post> posts = postRepository.search(condition, pageable);
         return posts.stream().map(PostGetResponse::of).toList();
     }

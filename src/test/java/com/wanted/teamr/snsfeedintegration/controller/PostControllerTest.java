@@ -211,6 +211,45 @@ public class PostControllerTest {
                     .andExpect(jsonPath("$.[1].contentId").value("zxcvb"));
         }
 
+        @DisplayName("검색 조건으로 해시태그 값이 미입력 시 사용자 계정이름을 해시태그로 사용하여 검색한다..")
+        @WithAuthUser
+        @Test
+        void givenBlankHashtag_thenReturnPosts() throws Exception {
+            // given
+            // post, hashtag 준비 - hashtag, contentId 제외 모든 것이 동일
+            String accountName = "testId";
+            createPostAndHashtags(
+                    "12345", SnsType.FACEBOOK,
+                    "강아지 해변", "책상 비행기 산책로",
+                    101L, 31L, 11L,
+                    LocalDateTime.of(2023, 10, 10, 10, 10, 10),
+                    LocalDateTime.of(2023, 10, 10, 10, 10, 10),
+                    List.of("도서관", "초콜릿")
+            );
+            createPostAndHashtags(
+                    "qwerty", SnsType.FACEBOOK,
+                    "강아지 해변", "책상 비행기 산책로",
+                    101L, 31L, 11L,
+                    LocalDateTime.of(2023, 10, 10, 10, 10, 10),
+                    LocalDateTime.of(2023, 10, 10, 10, 10, 10),
+                    List.of(accountName)
+            );
+
+            // when, then
+            mockMvc.perform(get("/api/posts")
+                            //.queryParam("hashtag", "호수")
+                            .queryParam("type", "facebook")
+                            .queryParam("orderBy", "createdAt,asc")
+                            .queryParam("searchBy", "content")
+                            .queryParam("search", "책상")
+                            .queryParam("pageCount", "10")
+                            .queryParam("page", "0")
+                    )
+                    .andDo(print())
+                    .andExpect(jsonPath("$.size()").value(1))
+                    .andExpect(jsonPath("$.[0].contentId").value("qwerty"));
+        }
+
         @DisplayName("소셜 미디어 타입과 일치하는 게시물 리스트를 응답한다.")
         @WithMockUser
         @Test

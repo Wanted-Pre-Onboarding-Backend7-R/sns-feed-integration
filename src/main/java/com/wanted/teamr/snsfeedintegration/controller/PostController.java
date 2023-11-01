@@ -27,8 +27,9 @@ public class PostController {
     }
 
     @GetMapping("/api/posts")
-    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable) {
-        return postService.getPostList(request, pageable);
+    public List<PostGetResponse> getPostList(PostSearchRequest request, Pageable pageable,
+                                             @CurrentMember Member member) {
+        return postService.getPostList(request, pageable, member);
     }
 
     @PostMapping("/api/posts/{postId}/like")
