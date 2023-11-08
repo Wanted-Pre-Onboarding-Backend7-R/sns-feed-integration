@@ -20,6 +20,7 @@ spring:
       - external-api-config.yml
       - pageable-config.yml
       - private/application-private.yml
+      - springdoc-config.yml
 
 logging:
   level:

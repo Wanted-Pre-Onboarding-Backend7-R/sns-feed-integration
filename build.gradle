@@ -49,6 +49,9 @@ dependencies {
 	// log4j2
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+	// swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 }
 
 tasks.named('test') {
