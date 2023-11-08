@@ -19,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final JwtSecurityConfig jwtSecurityConfig;
+    private final String swaggerUiPath;
+    private final String apiDocsPath;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/api/members/**").permitAll()
+                                .requestMatchers("/api/members/**", swaggerUiPath, apiDocsPath).permitAll()
                                 .anyRequest().authenticated()
                 );
 
