@@ -2,11 +2,6 @@ spring:
   profiles:
     active: prod
     default: prod
-  datasource:
-    url: jdbc:mysql://localhost:3307/{project_name}?serverTimezone=Asia/Seoul
-    username: wanted
-    password: wanted
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -24,11 +19,8 @@ spring:
     import:
       - external-api-config.yml
       - pageable-config.yml
+      - private/application-private.yml
 
 logging:
   level:
     sql: trace
-
-jwt:
-  secret:
-    key: {jwt_key}
