@@ -1,0 +1,3 @@
+[submodule "src/main/resources/private"]
+	path = src/main/resources/private
+	url = git@github.com:Wanted-Pre-Onboarding-Backend7-R/sns-feed-integration-private.git
