@@ -1,0 +1,10 @@
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    disable-swagger-default-url: false
+    path: /swagger-ui
+  api-docs:
+    path: /api-docs
+  paths-to-match:
+    - /api/**
