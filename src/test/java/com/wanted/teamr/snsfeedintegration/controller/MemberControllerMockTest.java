@@ -6,13 +6,8 @@ import com.wanted.teamr.snsfeedintegration.dto.MemberJoinRequest;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCode;
 import com.wanted.teamr.snsfeedintegration.exception.ErrorCodeType;
 import com.wanted.teamr.snsfeedintegration.exception.RequestBodyErrorCode;
-import com.wanted.teamr.snsfeedintegration.security.JwtSecurityConfig;
-import com.wanted.teamr.snsfeedintegration.jwt.JwtAccessDeniedHandler;
-import com.wanted.teamr.snsfeedintegration.jwt.JwtAuthenticationEntryPoint;
-import com.wanted.teamr.snsfeedintegration.jwt.TokenProvider;
-import com.wanted.teamr.snsfeedintegration.security.SecurityConfig;
+import com.wanted.teamr.snsfeedintegration.security.TestSecurityConfig;
 import com.wanted.teamr.snsfeedintegration.service.MemberService;
-import com.wanted.teamr.snsfeedintegration.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,12 +21,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.ACCOUNT_NAME;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.APPROVAL_CODE;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.BLANK;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.EMAIL;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.EMAIL_HEAD;
-import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.PASSWORD;
+import static com.wanted.teamr.snsfeedintegration.controller.TestConstants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("/api/members WebMvc")
-@Import(SecurityConfig.class)
-@MockBean(JwtSecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(MemberController.class)
 class MemberControllerMockTest {
 
@@ -53,14 +42,6 @@ class MemberControllerMockTest {
     private MemberService memberService;
     @Autowired
     private ObjectMapper mapper;
-    @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-    @MockBean
-    private TokenProvider tokenProvider;
-    @MockBean
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @MockBean
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @DisplayName("/join 사용자 회원가입 WebMvc")
     @Nested
@@ -186,7 +167,11 @@ class MemberControllerMockTest {
         @ParameterizedTest
         @ValueSource(strings = {"1235A", "1235AAA", "sd12A&"})
         void givenInvalidApprovalCodeFormat_then400(String approvalCode) throws Exception {
-            validateRequestBody(ACCOUNT_NAME, PASSWORD, approvalCode, RequestBodyErrorCode.APPROVAL_CODE_INVALID_FORMAT);
+            validateRequestBody(
+                    ACCOUNT_NAME,
+                    PASSWORD,
+                    approvalCode,
+                    RequestBodyErrorCode.APPROVAL_CODE_INVALID_FORMAT);
         }
 
         private void validateRequestBody(String accountName,
